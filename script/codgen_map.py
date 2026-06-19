@@ -30,23 +30,23 @@ class FileBuffer:
         self.name = name
         self.path = path
 
-    def get(self):
+    def get(self) -> str:
         return self.buffer
 
-    def add(self, s):
+    def add(self, s: str) -> None:
         self.buffer += s
 
-    def add_endl(self, s):
+    def add_endl(self, s: str) -> None:
         self.add(s)
         self.add("\n")
 
-    def trace_source(self):
+    def trace_source(self) -> None:
         caller_frame = inspect.stack()[1]
         filename = os.path.basename(caller_frame.filename)
         line = caller_frame.lineno
         self.add_endl(f"/* generated from {filename}: l.{line} */")
 
-    def write(self):
+    def write(self) -> None:
         with open(self.path, "w") as outfile:
             outfile.write(self.buffer)
 
