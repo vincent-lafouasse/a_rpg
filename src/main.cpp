@@ -1,3 +1,4 @@
+#include <array>
 #include <string>
 #include <string_view>
 
@@ -7,6 +8,21 @@
 #include "parse.hpp"
 
 #define FLOAT(expr) (static_cast<float>(expr))
+
+template <typename T, std::size_t W, std::size_t H>
+struct FlatArray {
+    static constexpr int width = W;
+    static constexpr int height = H;
+
+    std::array<T, W * H> inner{};
+
+    const T& at(int const row, const int col) const
+    {
+        return inner[row * W + col];
+    }
+
+    T& at(int const row, const int col) { return inner[row * W + col]; }
+};
 
 class Map {
    public:
