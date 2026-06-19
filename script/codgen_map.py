@@ -61,6 +61,15 @@ class Metadata:
     script_hash: str
     map_hash: str
 
+    def log(self) -> None:
+        print(f"script:        {self.script_name}.py")
+        print(f"map:           {self.map_name}")
+        print(f"width:         {self.width}")
+        print(f"height:        {self.height}")
+        print(f"tile_size:     {self.tile_size}")
+        print(f"script_hash:   {self.script_hash}")
+        print(f"map_hash:      {self.map_hash}")
+
 
 def read_metadata_or_exit(root, script_path: Path, map_path: Path) -> Metadata:
     script_name = script_path.parts[-1]
@@ -81,14 +90,6 @@ def read_metadata_or_exit(root, script_path: Path, map_path: Path) -> Metadata:
     tileheight = int(root.attrib["tileheight"])
     assert tilewidth == tileheight
     tile_size = tilewidth
-
-    print(f"script:      {script_basename}")
-    print(f"map:         {map_basename}")
-    print(f"width:       {width}")
-    print(f"height:      {height}")
-    print(f"tile_size:   {tile_size}")
-    print(f"script_hash: {script_hash}")
-    print(f"map_hash:    {map_hash}")
 
     return Metadata(
         script_basename, map_basename, width, height, tile_size, script_hash, map_hash
@@ -118,6 +119,7 @@ def main() -> None:
 
     root = etree.parse(map_path).getroot()
     metadata = read_metadata_or_exit(root, script_path, map_path)
+    metadata.log()
 
 
 if __name__ == "__main__":
