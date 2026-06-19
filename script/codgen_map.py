@@ -62,28 +62,19 @@ class Metadata:
     map_hash: str
 
 
-def main() -> None:
-    if len(sys.argv) != 2:
-        print(f"usage: uv run {sys.argv[0]} <map.tmx>", file=sys.stderr)
-        sys.exit(1)
+def read_metadata_or_exit(root, script_path: Path, map_path: Path) -> Metadata:
+    script_name = script_path.parts[-1]
+    map_name = map_path.parts[-1]
+    assert script_name[-3:] == ".py"
+    assert map_name[-4:] == ".tmx"
 
-    script_path = Path(__file__)
-    map_path = Path(sys.argv[1])
-
-    script_basename = script_path.parts[-1]
-    map_basename = map_path.parts[-1]
-    assert script_basename[-3:] == ".py"
-    assert map_basename[-4:] == ".tmx"
-
-    script_basename = script_basename[:-3]
-    map_basename = map_basename[:-4]
+    script_basename = script_name[:-3]
+    map_basename = map_name[:-4]
 
     script_hash = sha256(script_path)
     map_hash = sha256(map_path)
 
-    root = etree.parse(map_path).getroot()
     assert root.tag == "map"
-
     width = int(root.attrib["width"])
     height = int(root.attrib["height"])
     tilewidth = int(root.attrib["tilewidth"])
@@ -98,6 +89,22 @@ def main() -> None:
     print(f"tile_size:   {tile_size}")
     print(f"script_hash: {script_hash}")
     print(f"map_hash:    {map_hash}")
+
+    return Metadata(
+        script_basename, map_basename, width, height, tile_size, script_hash, map_hash
+    )
+
+
+def main() -> None:
+    if len(sys.argv) != 2:
+        print(f"usage: uv run {sys.argv[0]} <map.tmx>", file=sys.stderr)
+        sys.exit(1)
+
+    script_path = Path(__file__)
+    map_path = Path(sys.argv[1])
+
+    root = etree.parse(map_path).getroot()
+    metadata = read_metadata_or_exit(root, script_path, map_path)
 
 
 if __name__ == "__main__":
