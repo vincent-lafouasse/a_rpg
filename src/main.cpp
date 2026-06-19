@@ -8,6 +8,9 @@
 
 class Map {
    public:
+    using Line = std::vector<int>;
+    using Layer = std::vector<Line>;
+
     static constexpr int width = 10;
     static constexpr int height = 5;
 };
