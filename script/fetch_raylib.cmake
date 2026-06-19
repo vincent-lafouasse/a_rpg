@@ -13,3 +13,7 @@ if (NOT raylib_FOUND)
         FetchContent_MakeAvailable(raylib)
     endif()
 endif()
+
+if(NOT TARGET raylib::raylib)
+    add_library(raylib::raylib ALIAS raylib)
+endif()
