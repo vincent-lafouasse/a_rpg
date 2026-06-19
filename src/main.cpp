@@ -18,6 +18,20 @@ class Map {
 };
 
 class MapLoader {
+   private:
+    static int read_int_attribute_or_die(const tinyxml2::XMLElement* const e,
+                                         const char* attribute)
+    {
+        int out = 0;
+        const IntParseError err = read_int(e->Attribute(attribute), &out);
+        if (err != IntParseError::ok) {
+            std::fprintf(stderr, "fatal: <%s> attribute '%s': %s\n", e->Name(),
+                         attribute, message(err));
+            std::abort();
+        }
+        return out;
+    }
+
    public:
     static Map load_map(std::string_view path)
     {
@@ -29,10 +43,10 @@ class MapLoader {
         map_xml.LoadFile(map_path.c_str());
 
         const XMLElement* const root = map_xml.FirstChildElement("map");
-        const int width = atoi(root->Attribute("width"));
-        const int height = atoi(root->Attribute("height"));
-        const int tilewidth = atoi(root->Attribute("tilewidth"));
-        const int tileheight = atoi(root->Attribute("tileheight"));
+        const int width = read_int_attribute_or_die(root, "width");
+        const int height = read_int_attribute_or_die(root, "height");
+        const int tilewidth = read_int_attribute_or_die(root, "tilewidth");
+        const int tileheight = read_int_attribute_or_die(root, "tileheight");
 
         std::printf("width:\t\t%i\n", width);
         std::printf("height:\t\t%i\n", height);
