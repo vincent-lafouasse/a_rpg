@@ -10,6 +10,8 @@ from __future__ import annotations
 import hashlib
 import dataclasses
 import sys
+import inspect
+import os
 from pathlib import Path
 from lxml import etree
 
