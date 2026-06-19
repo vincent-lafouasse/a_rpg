@@ -6,6 +6,7 @@
 # ///
 
 import hashlib
+import dataclasses
 import sys
 from pathlib import Path
 from lxml import etree
@@ -13,6 +14,17 @@ from lxml import etree
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+@dataclasses.dataclass
+class ParsingContext:
+    script_name: str
+    map_name: str
+    width: int
+    height: int
+    tile_size: int
+    script_hash: str
+    map_hash: str
 
 
 def main() -> None:
