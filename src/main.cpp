@@ -21,9 +21,6 @@ class MapLoader {
         const std::string map_dir = "assets/maps/";
         const std::string map_path = map_dir + std::string{path};
 
-        const std::string tilemap_dir = "assets/maps/";
-        const std::string tilemap_path = "colored_tilemap_packed.tsx";
-
         return {};
     }
 };
