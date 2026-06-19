@@ -35,7 +35,8 @@ class FileBuffer:
         self.buffer += s
 
     def add_endl(self, s):
-        self.add(s + "\n")
+        self.add(s)
+        self.add("\n")
 
     def trace_source(self):
         caller_frame = inspect.stack()[1]
