@@ -16,6 +16,13 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def trace_source():
+    caller_frame = inspect.stack()[1]
+    filename = os.path.basename(caller_frame.filename)
+    line = caller_frame.lineno
+    return f"/* generated from {filename}: l.{line} */"
+
+
 @dataclasses.dataclass
 class ParsingContext:
     script_name: str
