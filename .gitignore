@@ -2,5 +2,6 @@ build
 .cache
 
 idea-build*
+.idea
 
 .DS_Store
