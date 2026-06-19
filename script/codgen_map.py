@@ -95,10 +95,8 @@ def read_metadata_or_exit(root, script_path: Path, map_path: Path) -> Metadata:
     )
 
 
-# some of this data should be redundantly present. once in the map .tmx, and
-# once in the tilemap .tsx
-#
-# might be worth double checking
+# primarily stored in the .tsx but worth double checking for consistency with
+# the .tmx
 @dataclasses.dataclass
 class Tilemap:
     name: str
