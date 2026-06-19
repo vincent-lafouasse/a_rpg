@@ -4,6 +4,8 @@
 #include <raylib.h>
 #include <tinyxml2.h>
 
+#include "parse.hpp"
+
 #define FLOAT(expr) (static_cast<float>(expr))
 
 class Map {
