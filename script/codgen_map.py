@@ -83,6 +83,9 @@ class Metadata:
         assert tilewidth == tileheight
         tile_size = tilewidth
 
+        assert root.attrib["orientation"] == "orthogonal"
+        assert root.attrib["renderorder"] == "right-down"
+
         return Metadata(
             script_basename,
             map_basename,
