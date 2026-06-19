@@ -1,3 +1,6 @@
 BasedOnStyle: Chromium
 
+BreakBeforeBraces: WebKit
+ColumnLimit: 80
 IndentWidth: 4
+ReflowComments: false

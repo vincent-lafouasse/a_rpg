@@ -14,7 +14,8 @@ class Map {
 
 class MapLoader {
    public:
-    static Map load_map(std::string_view path) {
+    static Map load_map(std::string_view path)
+    {
         using namespace tinyxml2;
 
         const std::string map_dir = "assets/maps/";
@@ -39,7 +40,8 @@ class Renderer {
     static constexpr int s_window_height = s_tile_size * Map::height;
 
    public:
-    Renderer() {
+    Renderer()
+    {
         InitWindow(s_window_width, s_window_height, s_window_name);
         SetTargetFPS(s_target_fps);
 
@@ -49,12 +51,14 @@ class Renderer {
         const std::string tile_path = tile_dir + "tile_0000.png";
         m_tile = LoadTexture(tile_path.c_str());
     }
-    ~Renderer() {
+    ~Renderer()
+    {
         UnloadTexture(m_tile);
         CloseWindow();
     }
 
-    void render(const Map& map) const {
+    void render(const Map& map) const
+    {
         (void)map;  // not actually using a map yet, just spamming a tile
         BeginDrawing();
         ClearBackground(RAYWHITE);
@@ -79,7 +83,8 @@ class Renderer {
     Texture2D m_tile;
 };
 
-int main() {
+int main()
+{
     Renderer renderer;
     Map map;
 
