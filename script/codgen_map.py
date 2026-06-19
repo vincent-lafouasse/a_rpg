@@ -116,7 +116,7 @@ class Tilemap:
     tile_size: int
     tile_count: int
     width: int
-    source: str
+    source: Path
     source_pixel_width: int
     source_pixel_height: int
 
