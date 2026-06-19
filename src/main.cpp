@@ -2,6 +2,7 @@
 #include <string_view>
 
 #include <raylib.h>
+#include <tinyxml2.h>
 
 #define FLOAT(expr) (static_cast<float>(expr))
 
@@ -13,7 +14,17 @@ class Map {
 
 class MapLoader {
    public:
-    static Map load_map(std::string_view path);
+    static Map load_map(std::string_view path) {
+        using namespace tinyxml2;
+
+        const std::string map_dir = "assets/maps/";
+        const std::string map_path = map_dir + std::string{path};
+
+        const std::string tilemap_dir = "assets/maps/";
+        const std::string tilemap_path = "colored_tilemap_packed.tsx";
+
+        return {};
+    }
 };
 
 class Renderer {
