@@ -32,6 +32,15 @@ struct FlatArray {
     }
 };
 
+struct LogicalTile {
+    bool traversable;
+};
+
+struct VisualTile {
+    uint32_t offset;
+    uint32_t tile_size;
+};
+
 class Map {
    public:
     using Line = std::vector<int>;
