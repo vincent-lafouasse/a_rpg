@@ -8,10 +8,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
-set(CMAKE_EXE_LINKER_FLAGS "-fsanitize=address,undefined")
 
 set(CMAKE_CXX_FLAGS "\
-    -Wall -Wextra -Wpedantic\
+    -Wall -Wextra -Wpedantic \
     -Wshadow \
     -Wnon-virtual-dtor \
     -Wold-style-cast \
@@ -32,7 +31,17 @@ set(CMAKE_CXX_FLAGS "\
     -Wextra-semi \
     -Wstrict-aliasing=2 \
     -Wno-unused-macros \
-    -fdiagnostics-color=always \
-    -g3 -fsanitize=address,undefined")
+    -fdiagnostics-color=always")
+
+set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g3 -fsanitize=address,undefined")
+set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG -Werror")
+
+set(CMAKE_EXE_LINKER_FLAGS_DEBUG   "-fsanitize=address,undefined")
+set(CMAKE_EXE_LINKER_FLAGS_RELEASE "")
+
+# Default to Debug if not specified
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
+endif()
 
 add_subdirectory(src)
