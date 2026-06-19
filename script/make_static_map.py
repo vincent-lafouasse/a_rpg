@@ -17,7 +17,7 @@ def sha256(path: Path) -> str:
 
 def main() -> None:
     if len(sys.argv) != 2:
-        print(f"usage: {sys.argv[0]} <map.tmx>", file=sys.stderr)
+        print(f"usage: uv run {sys.argv[0]} <map.tmx>", file=sys.stderr)
         sys.exit(1)
 
     script_path = Path(__file__)
