@@ -5,6 +5,8 @@
 # ]
 # ///
 
+from __future__ import annotations
+
 import hashlib
 import dataclasses
 import sys
@@ -57,6 +59,40 @@ class Metadata:
     script_hash: str
     map_hash: str
 
+    @staticmethod
+    def read(root, script_path: Path, map_path: Path) -> Metadata:
+        script_name = script_path.parts[-1]
+        map_name = map_path.parts[-1]
+        assert script_name[-3:] == ".py"
+        assert map_name[-4:] == ".tmx"
+
+        script_basename = script_name[:-3]
+        map_basename = map_name[:-4]
+
+        def sha256(path: Path) -> str:
+            return hashlib.sha256(path.read_bytes()).hexdigest()
+
+        script_hash = sha256(script_path)
+        map_hash = sha256(map_path)
+
+        assert root.tag == "map"
+        width = int(root.attrib["width"])
+        height = int(root.attrib["height"])
+        tilewidth = int(root.attrib["tilewidth"])
+        tileheight = int(root.attrib["tileheight"])
+        assert tilewidth == tileheight
+        tile_size = tilewidth
+
+        return Metadata(
+            script_basename,
+            map_basename,
+            width,
+            height,
+            tile_size,
+            script_hash,
+            map_hash,
+        )
+
     def log(self) -> None:
         print(f"script:        {self.script_name}.py")
         print(f"map:           {self.map_name}")
@@ -65,34 +101,6 @@ class Metadata:
         print(f"tile_size:     {self.tile_size}")
         print(f"script_hash:   {self.script_hash}")
         print(f"map_hash:      {self.map_hash}")
-
-
-def read_metadata_or_exit(root, script_path: Path, map_path: Path) -> Metadata:
-    script_name = script_path.parts[-1]
-    map_name = map_path.parts[-1]
-    assert script_name[-3:] == ".py"
-    assert map_name[-4:] == ".tmx"
-
-    script_basename = script_name[:-3]
-    map_basename = map_name[:-4]
-
-    def sha256(path: Path) -> str:
-        return hashlib.sha256(path.read_bytes()).hexdigest()
-
-    script_hash = sha256(script_path)
-    map_hash = sha256(map_path)
-
-    assert root.tag == "map"
-    width = int(root.attrib["width"])
-    height = int(root.attrib["height"])
-    tilewidth = int(root.attrib["tilewidth"])
-    tileheight = int(root.attrib["tileheight"])
-    assert tilewidth == tileheight
-    tile_size = tilewidth
-
-    return Metadata(
-        script_basename, map_basename, width, height, tile_size, script_hash, map_hash
-    )
 
 
 # primarily stored in the .tsx but worth double checking for consistency with
@@ -117,7 +125,7 @@ def main() -> None:
     map_path = Path(sys.argv[1])
 
     root = etree.parse(map_path).getroot()
-    metadata = read_metadata_or_exit(root, script_path, map_path)
+    metadata = Metadata.read(root, script_path, map_path)
     metadata.log()
 
 
