@@ -16,6 +16,11 @@ struct FlatArray {
 
     std::array<T, W * H> inner{};
 
+    static bool in_bounds(int x, int y)
+    {
+        return x >= 0 && x < W && y >= 0 && y < H;
+    }
+
     const T& at(int const row, const int col) const
     {
         return inner[row * W + col];
