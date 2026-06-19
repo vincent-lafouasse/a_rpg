@@ -17,8 +17,7 @@ class Renderer {
    private:
     static constexpr const char* s_window_name = "rpg";
     static constexpr int s_target_fps = 60;
-    static constexpr const char* s_tile_dir =
-        "assets/kenney_micro-roguelike/Tiles/Colored/";
+    static constexpr const char* s_sprite_dir = "assets/sprites/";
     static constexpr int s_window_width = s_tile_size * Map::width;
     static constexpr int s_window_height = s_tile_size * Map::height;
 
@@ -27,7 +26,9 @@ class Renderer {
         InitWindow(s_window_width, s_window_height, s_window_name);
         SetTargetFPS(s_target_fps);
 
-        const std::string tile_dir = s_tile_dir;
+        const std::string sprite_dir = s_sprite_dir;
+        const std::string tile_dir =
+            sprite_dir + "kenney_micro-roguelike/Tiles/Colored/";
         const std::string tile_path = tile_dir + "tile_0000.png";
         m_tile = LoadTexture(tile_path.c_str());
     }
