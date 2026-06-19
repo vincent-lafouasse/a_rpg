@@ -11,20 +11,27 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 set(CMAKE_EXE_LINKER_FLAGS "-fsanitize=address,undefined")
 
 set(CMAKE_CXX_FLAGS "\
-    -Wall -Wextra -pedantic \
+    -Wall -Wextra -Wpedantic\
     -Wshadow \
     -Wnon-virtual-dtor \
     -Wold-style-cast \
     -Wcast-align \
+    -Wcast-qual \
     -Wunused \
     -Woverloaded-virtual \
-    -Wpedantic \
     -Wconversion \
     -Wsign-conversion \
+    -Wfloat-equal \
     -Wnull-dereference \
     -Wdouble-promotion \
     -Wformat=2 \
     -Wimplicit-fallthrough \
+    -Wswitch-enum \
+    -Wundef \
+    -Wzero-as-null-pointer-constant \
+    -Wextra-semi \
+    -Wstrict-aliasing=2 \
+    -Wno-unused-macros \
     -fdiagnostics-color=always \
     -g3 -fsanitize=address,undefined")
 
