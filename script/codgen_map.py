@@ -34,6 +34,12 @@ class FileBuffer:
     def add_endl(self, s):
         self.add(s + "\n")
 
+    def trace_source(self):
+        caller_frame = inspect.stack()[1]
+        filename = os.path.basename(caller_frame.filename)
+        line = caller_frame.lineno
+        self.add_endl(f"/* generated from {filename}: l.{line} */")
+
     def write(self):
         # do file io
         pass
