@@ -16,10 +16,23 @@ class MapLoader {
    public:
     static Map load_map(std::string_view path)
     {
-        using namespace tinyxml2;
-
         const std::string map_dir = "assets/maps/";
         const std::string map_path = map_dir + std::string{path};
+
+        using namespace tinyxml2;
+        XMLDocument map_xml;
+        map_xml.LoadFile(map_path.c_str());
+
+        const XMLElement* const root = map_xml.FirstChildElement("map");
+        const int width = atoi(root->Attribute("width"));
+        const int height = atoi(root->Attribute("height"));
+        const int tilewidth = atoi(root->Attribute("tilewidth"));
+        const int tileheight = atoi(root->Attribute("tileheight"));
+
+        std::printf("width:\t\t%i\n", width);
+        std::printf("height:\t\t%i\n", height);
+        std::printf("tilewidth:\t%i\n", tilewidth);
+        std::printf("tileheight:\t%i\n", tileheight);
 
         return {};
     }
@@ -83,7 +96,7 @@ class Renderer {
 int main()
 {
     Renderer renderer;
-    Map map;
+    Map map = MapLoader::load_map("test1.tmx");
 
     while (!WindowShouldClose()) {
         renderer.render(map);
