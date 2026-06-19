@@ -2,6 +2,8 @@
 
 #include <raylib.h>
 
+#define FLOAT(expr) (static_cast<float>(expr))
+
 class Map {
    public:
     static constexpr int width = 10;
@@ -41,12 +43,12 @@ class Renderer {
 
         for (int row = 0; row < Map::height; ++row) {
             for (int col = 0; col < Map::width; ++col) {
-                Rectangle src{0, 0, (float)m_tile.width, (float)m_tile.height};
+                Rectangle src{0, 0, FLOAT(m_tile.width), FLOAT(m_tile.height)};
                 Rectangle dst{
-                    (float)(col * s_tile_size),
-                    (float)(row * s_tile_size),
-                    (float)s_tile_size,
-                    (float)s_tile_size,
+                    FLOAT(col * s_tile_size),
+                    FLOAT(row * s_tile_size),
+                    FLOAT(s_tile_size),
+                    FLOAT(s_tile_size),
                 };
                 DrawTexturePro(m_tile, src, dst, {0, 0}, 0.0f, WHITE);
             }
