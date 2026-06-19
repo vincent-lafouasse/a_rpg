@@ -28,6 +28,9 @@ class FileBuffer:
         self.name = name
         self.buffer = ""
 
+    def get(self):
+        return self.buffer
+
     def add(self, s):
         self.buffer += s
 
