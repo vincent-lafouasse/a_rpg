@@ -24,9 +24,11 @@ def trace_source():
 
 
 class FileBuffer:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, name, path):
         self.buffer = ""
+        # vvv still unsure which one i need
+        self.name = name
+        self.path = path
 
     def get(self):
         return self.buffer
@@ -45,8 +47,8 @@ class FileBuffer:
         self.add_endl(f"/* generated from {filename}: l.{line} */")
 
     def write(self):
-        # do file io
-        pass
+        with open(self.path, "w") as outfile:
+            outfile.write(self.buffer)
 
 
 @dataclasses.dataclass
