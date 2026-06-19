@@ -10,3 +10,8 @@ FetchContent_MakeAvailable(tinyxml2)
 set(BUILD_TESTING ON CACHE BOOL "" FORCE)
 
 target_compile_options(tinyxml2 PRIVATE -w)
+
+# Suppress warnings when tinyxml2.h is included in user TUs
+get_target_property(_tinyxml2_includes tinyxml2 INTERFACE_INCLUDE_DIRECTORIES)
+set_target_properties(tinyxml2 PROPERTIES
+    INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${_tinyxml2_includes}")
