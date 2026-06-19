@@ -52,7 +52,7 @@ class FileBuffer:
 
 
 @dataclasses.dataclass
-class ParsingContext:
+class Metadata:
     script_name: str
     map_name: str
     width: int
