@@ -26,7 +26,7 @@ clean:
 	rm -rf build
 
 fmt:
-	clang-format -i $(shell find src -name '*.cpp' -o -name '*.hpp' -o -name '*.h')
+	clang-format -i $(shell find src -name '*.cpp' -o -name '*.hpp' -o -name '*.h' | grep -v '\.gen\.')
 
 b: debug
 r: run
