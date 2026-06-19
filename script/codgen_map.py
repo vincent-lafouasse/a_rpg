@@ -89,13 +89,13 @@ class Metadata:
         assert root.attrib["renderorder"] == "right-down"
 
         return Metadata(
-            script_basename,
-            map_basename,
-            width,
-            height,
-            tile_size,
-            script_hash,
-            map_hash,
+            script_name=script_basename,
+            map_name=map_basename,
+            width=width,
+            height=height,
+            tile_size=tile_size,
+            script_hash=script_hash,
+            map_hash=map_hash,
         )
 
     def log(self) -> None:
