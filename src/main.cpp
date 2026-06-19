@@ -1,3 +1,5 @@
+#include <string>
+
 #include <raylib.h>
 
 class Map {
@@ -8,41 +10,60 @@ class Map {
 
 class Renderer {
    public:
-    static constexpr const char* window_name = "rpg";
-    static constexpr int target_fps = 60;
-    static constexpr int tile_size = 64;
-    static constexpr int window_width = Renderer::tile_size * Map::width;
-    static constexpr int window_height = Renderer::tile_size * Map::height;
-};
+    static constexpr int s_tile_size = 64;
 
-int main() {
-    InitWindow(Renderer::window_width, Renderer::window_height,
-               Renderer::window_name);
-    SetTargetFPS(Renderer::target_fps);
+   private:
+    static constexpr const char* s_window_name = "rpg";
+    static constexpr int s_target_fps = 60;
+    static constexpr const char* s_tile_dir =
+        "assets/kenney_micro-roguelike/Tiles/Colored/";
+    static constexpr int s_window_width = s_tile_size * Map::width;
+    static constexpr int s_window_height = s_tile_size * Map::height;
 
-    Texture2D tile = LoadTexture(
-        "assets/kenney_micro-roguelike/Tiles/Colored/tile_0000.png");
+   public:
+    Renderer() {
+        InitWindow(s_window_width, s_window_height, s_window_name);
+        SetTargetFPS(s_target_fps);
 
-    while (!WindowShouldClose()) {
+        const std::string tile_dir = s_tile_dir;
+        const std::string tile_path = tile_dir + "tile_0000.png";
+        m_tile = LoadTexture(tile_path.c_str());
+    }
+    ~Renderer() {
+        UnloadTexture(m_tile);
+        CloseWindow();
+    }
+
+    void render(const Map& map) const {
+        (void)map;  // not actually using a map yet, just spamming a tile
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
         for (int row = 0; row < Map::height; ++row) {
             for (int col = 0; col < Map::width; ++col) {
-                Rectangle src{0, 0, (float)tile.width, (float)tile.height};
+                Rectangle src{0, 0, (float)m_tile.width, (float)m_tile.height};
                 Rectangle dst{
-                    (float)(col * Renderer::tile_size),
-                    (float)(row * Renderer::tile_size),
-                    (float)Renderer::tile_size,
-                    (float)Renderer::tile_size,
+                    (float)(col * s_tile_size),
+                    (float)(row * s_tile_size),
+                    (float)s_tile_size,
+                    (float)s_tile_size,
                 };
-                DrawTexturePro(tile, src, dst, {0, 0}, 0.0f, WHITE);
+                DrawTexturePro(m_tile, src, dst, {0, 0}, 0.0f, WHITE);
             }
         }
 
         EndDrawing();
     }
 
-    UnloadTexture(tile);
-    CloseWindow();
+   private:
+    Texture2D m_tile;
+};
+
+int main() {
+    Renderer renderer;
+    Map map;
+
+    while (!WindowShouldClose()) {
+        renderer.render(map);
+    }
 }
