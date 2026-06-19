@@ -53,7 +53,7 @@ class Renderer {
     static constexpr int s_window_height = s_tile_size * Map::height;
 
    public:
-    Renderer()
+    Renderer() : m_tile()
     {
         InitWindow(s_window_width, s_window_height, s_window_name);
         SetTargetFPS(s_target_fps);
