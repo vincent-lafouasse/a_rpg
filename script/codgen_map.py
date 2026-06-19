@@ -95,6 +95,21 @@ def read_metadata_or_exit(root, script_path: Path, map_path: Path) -> Metadata:
     )
 
 
+# some of this data should be redundantly present. once in the map .tmx, and
+# once in the tilemap .tsx
+#
+# might be worth double checking
+@dataclasses.dataclass
+class Tilemap:
+    name: str
+    tile_size: int
+    tile_count: int
+    width: int
+    source: str
+    source_pixel_width: int
+    source_pixel_height: int
+
+
 def main() -> None:
     if len(sys.argv) != 2:
         print(f"usage: uv run {sys.argv[0]} <map.tmx>", file=sys.stderr)
