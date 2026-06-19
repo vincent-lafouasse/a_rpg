@@ -31,6 +31,9 @@ class FileBuffer:
     def add(self, s):
         self.buffer += s
 
+    def add_endl(self, s):
+        self.add(s + "\n")
+
     def write(self):
         # do file io
         pass
