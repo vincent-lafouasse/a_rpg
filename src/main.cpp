@@ -11,6 +11,11 @@ class Map {
     static constexpr int height = 5;
 };
 
+class MapLoader {
+   public:
+    static Map load_map(std::string_view path);
+};
+
 class Renderer {
    public:
     static constexpr int s_tile_size = 64;
