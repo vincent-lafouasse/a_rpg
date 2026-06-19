@@ -12,10 +12,6 @@ from pathlib import Path
 from lxml import etree
 
 
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
 def trace_source() -> str:
     caller_frame = inspect.stack()[1]
     filename = os.path.basename(caller_frame.filename)
@@ -79,6 +75,9 @@ def read_metadata_or_exit(root, script_path: Path, map_path: Path) -> Metadata:
 
     script_basename = script_name[:-3]
     map_basename = map_name[:-4]
+
+    def sha256(path: Path) -> str:
+        return hashlib.sha256(path.read_bytes()).hexdigest()
 
     script_hash = sha256(script_path)
     map_hash = sha256(map_path)
