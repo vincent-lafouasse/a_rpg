@@ -115,10 +115,44 @@ class Tilemap:
     name: str
     tile_size: int
     tile_count: int
-    width: int
+    columns: int
     source: Path
     source_pixel_width: int
     source_pixel_height: int
+
+    @staticmethod
+    def read(tmx_root, map_path: Path) -> Tilemap:
+        tileset_el = tmx_root.find("tileset")
+        assert tileset_el is not None
+        tsx_path = map_path.parent / tileset_el.attrib["source"]
+
+        tsx_root = etree.parse(tsx_path).getroot()
+        assert tsx_root.tag == "tileset"
+
+        tilewidth = int(tsx_root.attrib["tilewidth"])
+        tileheight = int(tsx_root.attrib["tileheight"])
+        assert tilewidth == tileheight
+
+        image_el = tsx_root.find("image")
+        assert image_el is not None
+
+        return Tilemap(
+            name=tsx_root.attrib["name"],
+            tile_size=tilewidth,
+            tile_count=int(tsx_root.attrib["tilecount"]),
+            columns=int(tsx_root.attrib["columns"]),
+            source=(tsx_path.parent / image_el.attrib["source"]).resolve(),
+            source_pixel_width=int(image_el.attrib["width"]),
+            source_pixel_height=int(image_el.attrib["height"]),
+        )
+
+    def log(self) -> None:
+        print(f"tilemap name:  {self.name}")
+        print(f"tile_size:     {self.tile_size}")
+        print(f"tile_count:    {self.tile_count}")
+        print(f"columns:       {self.columns}")
+        print(f"source:        {self.source}")
+        print(f"px size:       {self.source_pixel_width}x{self.source_pixel_height}")
 
 
 def main() -> None:
@@ -132,6 +166,8 @@ def main() -> None:
     root = etree.parse(map_path).getroot()
     metadata = Metadata.read(root, script_path, map_path)
     metadata.log()
+    tilemap = Tilemap.read(root, map_path)
+    tilemap.log()
 
 
 if __name__ == "__main__":
