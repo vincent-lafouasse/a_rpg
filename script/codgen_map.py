@@ -23,6 +23,19 @@ def trace_source():
     return f"/* generated from {filename}: l.{line} */"
 
 
+class FileBuffer:
+    def __init__(self, name):
+        self.name = name
+        self.buffer = ""
+
+    def add(self, s):
+        self.buffer += s
+
+    def write(self):
+        # do file io
+        pass
+
+
 @dataclasses.dataclass
 class ParsingContext:
     script_name: str
