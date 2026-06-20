@@ -5,8 +5,6 @@
 
 #include "core.hpp"
 
-#include "parse.hpp"
-
 struct LogicalTile {
     bool traversable;
 };
