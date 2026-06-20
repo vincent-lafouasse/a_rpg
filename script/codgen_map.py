@@ -179,7 +179,7 @@ def tilemap_fingerprint(tilemap: Tilemap, script_hash: str) -> str:
     )
 
 
-def extract_layer(tmx_root, metadata: Metadata) -> str:
+def extract_layer_csv(tmx_root, metadata: Metadata) -> str:
     layers = tmx_root.findall("layer")
     assert len(layers) == 1, f"expected 1 layer, got {len(layers)}"
 
@@ -192,6 +192,22 @@ def extract_layer(tmx_root, metadata: Metadata) -> str:
     assert data_el.attrib.get("encoding") == "csv"
 
     return data_el.text.strip()
+
+
+def parse_layer(csv: str, metadata: Metadata) -> list[int]:
+    rows = [[int(v) for v in row.split(",") if v.strip()] for row in csv.splitlines()]
+
+    assert (
+        len(rows) == metadata.height
+    ), f"expected {metadata.height} rows, got {len(rows)}"
+    for i, row in enumerate(rows):
+        assert (
+            len(row) == metadata.width
+        ), f"row {i}: expected {metadata.width} cols, got {len(row)}"
+        for v in row:
+            assert 0 <= v <= 0xFFFF, f"row {i}: value {v} does not fit in u16"
+
+    return [v for row in rows for v in row]
 
 
 def check_fingerprint(path: Path, fingerprint: str) -> bool:
@@ -214,8 +230,10 @@ def main() -> None:
     metadata.log()
     tilemap = Tilemap.read(root, map_path)
     tilemap.log()
-    layer_csv = extract_layer(root, metadata)
-    print(f"layer:\n{layer_csv}")
+    layer_csv = extract_layer_csv(root, metadata)
+    layer = parse_layer(layer_csv, metadata)
+    print(f"layer csv:\n{layer_csv}")
+    print(f"layer: {layer}")
 
 
 if __name__ == "__main__":
