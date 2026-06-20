@@ -24,42 +24,43 @@ SCRIPT_NAME = SCRIPT_PATH.parts[-1]
 ### ----- parsing the XML files that Tiled gave me
 
 
-@dataclasses.dataclass
-class Metadata:
-    map_name: str
-    width: int
-    height: int
-    tile_size: int
+class Tilemap:
+    @dataclasses.dataclass
+    class Metadata:
+        map_name: str
+        width: int
+        height: int
+        tile_size: int
 
-    @staticmethod
-    def read(root, map_path: Path) -> Metadata:
-        map_name = map_path.parts[-1]
-        assert map_name[-4:] == ".tmx"
-        map_basename = map_name[:-4]
+        @staticmethod
+        def read(root, map_path: Path) -> Metadata:
+            map_name = map_path.parts[-1]
+            assert map_name[-4:] == ".tmx"
+            map_basename = map_name[:-4]
 
-        assert root.tag == "map"
-        width = int(root.attrib["width"])
-        height = int(root.attrib["height"])
-        tilewidth = int(root.attrib["tilewidth"])
-        tileheight = int(root.attrib["tileheight"])
-        assert tilewidth == tileheight
-        tile_size = tilewidth
+            assert root.tag == "map"
+            width = int(root.attrib["width"])
+            height = int(root.attrib["height"])
+            tilewidth = int(root.attrib["tilewidth"])
+            tileheight = int(root.attrib["tileheight"])
+            assert tilewidth == tileheight
+            tile_size = tilewidth
 
-        assert root.attrib["orientation"] == "orthogonal"
-        assert root.attrib["renderorder"] == "right-down"
+            assert root.attrib["orientation"] == "orthogonal"
+            assert root.attrib["renderorder"] == "right-down"
 
-        return Metadata(
-            map_name=map_basename,
-            width=width,
-            height=height,
-            tile_size=tile_size,
-        )
+            return Tilemap.Metadata(
+                map_name=map_basename,
+                width=width,
+                height=height,
+                tile_size=tile_size,
+            )
 
-    def log(self) -> None:
-        print(f"map:           {self.map_name}")
-        print(f"width:         {self.width}")
-        print(f"height:        {self.height}")
-        print(f"tile_size:     {self.tile_size}")
+        def log(self) -> None:
+            print(f"map:           {self.map_name}")
+            print(f"width:         {self.width}")
+            print(f"height:        {self.height}")
+            print(f"tile_size:     {self.tile_size}")
 
 
 # primarily stored in the .tsx but worth double checking for consistency with
@@ -186,7 +187,7 @@ def main() -> None:
     map_path = Path(sys.argv[1])
 
     root = etree.parse(map_path).getroot()
-    metadata = Metadata.read(root, map_path)
+    metadata = Tilemap.Metadata.read(root, map_path)
     metadata.log()
     tileset = Tileset.read(root, map_path)
     tileset.log()
