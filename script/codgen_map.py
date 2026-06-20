@@ -81,7 +81,7 @@ class Metadata:
 # primarily stored in the .tsx but worth double checking for consistency with
 # the .tmx
 @dataclasses.dataclass
-class Tilemap:
+class Tileset:
     name: str
     tile_size: int
     tile_count: int
@@ -92,7 +92,7 @@ class Tilemap:
     tsx_hash: str
 
     @staticmethod
-    def read(tmx_root, map_path: Path) -> Tilemap:
+    def read(tmx_root, map_path: Path) -> Tileset:
         tileset_el = tmx_root.find("tileset")
         assert tileset_el is not None
         tsx_path = map_path.parent / tileset_el.attrib["source"]
@@ -107,7 +107,7 @@ class Tilemap:
         image_el = tsx_root.find("image")
         assert image_el is not None
 
-        return Tilemap(
+        return Tileset(
             name=tsx_root.attrib["name"],
             tile_size=tilewidth,
             tile_count=int(tsx_root.attrib["tilecount"]),
@@ -119,7 +119,7 @@ class Tilemap:
         )
 
     def log(self) -> None:
-        print(f"tilemap name:  {self.name}")
+        print(f"tileset name:  {self.name}")
         print(f"tile_size:     {self.tile_size}")
         print(f"tile_count:    {self.tile_count}")
         print(f"columns:       {self.columns}")
@@ -172,12 +172,12 @@ def map_fingerprint(metadata: Metadata) -> str:
     )
 
 
-def tilemap_fingerprint(tilemap: Tilemap, script_hash: str) -> str:
+def tileset_fingerprint(tileset: Tileset, script_hash: str) -> str:
     return inspect.cleandoc(
         f"""
         /*!
          * script_hash  : {script_hash}
-         * tilemap_hash : {tilemap.tsx_hash}
+         * tileset_hash : {tileset.tsx_hash}
          */
     """
     )
@@ -201,8 +201,8 @@ def main() -> None:
     root = etree.parse(map_path).getroot()
     metadata = Metadata.read(root, script_path, map_path)
     metadata.log()
-    tilemap = Tilemap.read(root, map_path)
-    tilemap.log()
+    tileset = Tileset.read(root, map_path)
+    tileset.log()
     layer_csv = extract_layer_csv(root, metadata)
     layer = parse_layer(layer_csv, metadata)
     print(f"layer csv:\n{layer_csv}")
