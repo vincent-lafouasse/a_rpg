@@ -1,5 +1,9 @@
 #pragma once
 
+//! core module
+// is included by pretty much everybody
+// includes no-one, generally has no dependencies beyond libc[++]
+
 #include <array>
 
 #define FLOAT(expr) (static_cast<float>(expr))
