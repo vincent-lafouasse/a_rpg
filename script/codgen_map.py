@@ -18,6 +18,9 @@ from pathlib import Path
 from lxml import etree
 
 
+### ----- parsing the XML files that Tiled gave me
+
+
 @dataclasses.dataclass
 class Metadata:
     script_name: str
@@ -124,28 +127,6 @@ class Tilemap:
         print(f"px size:       {self.source_pixel_width}x{self.source_pixel_height}")
 
 
-def map_fingerprint(metadata: Metadata) -> str:
-    return inspect.cleandoc(
-        f"""
-        /*!
-         * script_hash : {metadata.script_hash}
-         * map_hash    : {metadata.map_hash}
-         */
-    """
-    )
-
-
-def tilemap_fingerprint(tilemap: Tilemap, script_hash: str) -> str:
-    return inspect.cleandoc(
-        f"""
-        /*!
-         * script_hash  : {script_hash}
-         * tilemap_hash : {tilemap.tsx_hash}
-         */
-    """
-    )
-
-
 def extract_layer_csv(tmx_root, metadata: Metadata) -> str:
     layers = tmx_root.findall("layer")
     assert len(layers) == 1, f"expected 1 layer, got {len(layers)}"
@@ -175,6 +156,31 @@ def parse_layer(csv: str, metadata: Metadata) -> list[int]:
             assert 0 <= v <= 0xFFFF, f"row {i}: value {v} does not fit in u16"
 
     return [v for row in rows for v in row]
+
+
+### ----- hashes and no-op detection
+
+
+def map_fingerprint(metadata: Metadata) -> str:
+    return inspect.cleandoc(
+        f"""
+        /*!
+         * script_hash : {metadata.script_hash}
+         * map_hash    : {metadata.map_hash}
+         */
+    """
+    )
+
+
+def tilemap_fingerprint(tilemap: Tilemap, script_hash: str) -> str:
+    return inspect.cleandoc(
+        f"""
+        /*!
+         * script_hash  : {script_hash}
+         * tilemap_hash : {tilemap.tsx_hash}
+         */
+    """
+    )
 
 
 def check_fingerprint(path: Path, fingerprint: str) -> bool:
