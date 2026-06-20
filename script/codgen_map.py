@@ -62,6 +62,8 @@ class Tilemap:
             print(f"height:        {self.height}")
             print(f"tile_size:     {self.tile_size}")
 
+        # ----- end Metadata -----
+
 
 # primarily stored in the .tsx but worth double checking for consistency with
 # the .tmx
