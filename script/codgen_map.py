@@ -179,6 +179,21 @@ def tilemap_fingerprint(tilemap: Tilemap, script_hash: str) -> str:
     )
 
 
+def extract_layer(tmx_root, metadata: Metadata) -> str:
+    layers = tmx_root.findall("layer")
+    assert len(layers) == 1, f"expected 1 layer, got {len(layers)}"
+
+    layer = layers[0]
+    assert int(layer.attrib["width"]) == metadata.width
+    assert int(layer.attrib["height"]) == metadata.height
+
+    data_el = layer.find("data")
+    assert data_el is not None
+    assert data_el.attrib.get("encoding") == "csv"
+
+    return data_el.text.strip()
+
+
 def check_fingerprint(path: Path, fingerprint: str) -> bool:
     if not path.exists():
         return False
@@ -199,6 +214,8 @@ def main() -> None:
     metadata.log()
     tilemap = Tilemap.read(root, map_path)
     tilemap.log()
+    layer_csv = extract_layer(root, metadata)
+    print(f"layer:\n{layer_csv}")
 
 
 if __name__ == "__main__":
