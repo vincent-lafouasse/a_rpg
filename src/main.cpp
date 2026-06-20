@@ -2,7 +2,6 @@
 #include <string_view>
 
 #include <raylib.h>
-#include <tinyxml2.h>
 
 #include "core.hpp"
 
@@ -24,46 +23,6 @@ class Map {
 
     static constexpr int width = 10;
     static constexpr int height = 5;
-};
-
-class MapLoader {
-   private:
-    static int read_int_attribute_or_die(const tinyxml2::XMLElement* const e,
-                                         const char* attribute)
-    {
-        int out = 0;
-        const IntParseError err = read_int(e->Attribute(attribute), &out);
-        if (err != IntParseError::ok) {
-            std::fprintf(stderr, "fatal: <%s> attribute '%s': %s\n", e->Name(),
-                         attribute, message(err));
-            std::abort();
-        }
-        return out;
-    }
-
-   public:
-    static Map load_map(std::string_view path)
-    {
-        const std::string map_dir = "assets/maps/";
-        const std::string map_path = map_dir + std::string{path};
-
-        using namespace tinyxml2;
-        XMLDocument map_xml;
-        map_xml.LoadFile(map_path.c_str());
-
-        const XMLElement* const root = map_xml.FirstChildElement("map");
-        const int width = read_int_attribute_or_die(root, "width");
-        const int height = read_int_attribute_or_die(root, "height");
-        const int tilewidth = read_int_attribute_or_die(root, "tilewidth");
-        const int tileheight = read_int_attribute_or_die(root, "tileheight");
-
-        std::printf("width:\t\t%i\n", width);
-        std::printf("height:\t\t%i\n", height);
-        std::printf("tilewidth:\t%i\n", tilewidth);
-        std::printf("tileheight:\t%i\n", tileheight);
-
-        return {};
-    }
 };
 
 class Renderer {
@@ -124,7 +83,7 @@ class Renderer {
 int main()
 {
     Renderer renderer;
-    Map map = MapLoader::load_map("test1.tmx");
+    Map map;
 
     while (!WindowShouldClose()) {
         renderer.render(map);
