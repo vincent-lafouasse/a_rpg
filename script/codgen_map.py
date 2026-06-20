@@ -179,6 +179,13 @@ def tilemap_fingerprint(tilemap: Tilemap, script_hash: str) -> str:
     )
 
 
+def check_fingerprint(path: Path, fingerprint: str) -> bool:
+    if not path.exists():
+        return False
+    lines = path.read_text().splitlines()[:4]
+    return "\n".join(lines) == fingerprint
+
+
 def main() -> None:
     if len(sys.argv) != 2:
         print(f"usage: uv run {sys.argv[0]} <map.tmx>", file=sys.stderr)
