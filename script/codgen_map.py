@@ -17,8 +17,7 @@ import os
 from pathlib import Path
 from lxml import etree
 
-SCRIPT_PATH = Path(__file__)
-SCRIPT_NAME = SCRIPT_PATH.parts[-1]
+THIS_SCRIPT = Path(__file__)
 
 
 ### ----- parsing the XML files that Tiled gave me
@@ -34,9 +33,7 @@ class Tilemap:
 
         @staticmethod
         def read(root, map_path: Path) -> Metadata:
-            map_name = map_path.parts[-1]
-            assert map_name[-4:] == ".tmx"
-            map_basename = map_name[:-4]
+            assert map_path.suffix == ".tmx"
 
             assert root.tag == "map"
             width = int(root.attrib["width"])
@@ -50,7 +47,7 @@ class Tilemap:
             assert root.attrib["renderorder"] == "right-down"
 
             return Tilemap.Metadata(
-                map_name=map_basename,
+                map_name=map_path.stem,
                 width=width,
                 height=height,
                 tile_size=tile_size,
