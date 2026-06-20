@@ -119,6 +119,7 @@ class Tilemap:
     source: Path
     source_pixel_width: int
     source_pixel_height: int
+    tsx_hash: str
 
     @staticmethod
     def read(tmx_root, map_path: Path) -> Tilemap:
@@ -144,6 +145,7 @@ class Tilemap:
             source=(tsx_path.parent / image_el.attrib["source"]).resolve(),
             source_pixel_width=int(image_el.attrib["width"]),
             source_pixel_height=int(image_el.attrib["height"]),
+            tsx_hash=hashlib.sha256(tsx_path.read_bytes()).hexdigest(),
         )
 
     def log(self) -> None:
@@ -153,6 +155,28 @@ class Tilemap:
         print(f"columns:       {self.columns}")
         print(f"source:        {self.source}")
         print(f"px size:       {self.source_pixel_width}x{self.source_pixel_height}")
+
+
+def map_fingerprint(metadata: Metadata) -> str:
+    return inspect.cleandoc(
+        f"""
+        /*!
+         * script_hash : {metadata.script_hash}
+         * map_hash    : {metadata.map_hash}
+         */
+    """
+    )
+
+
+def tilemap_fingerprint(tilemap: Tilemap, script_hash: str) -> str:
+    return inspect.cleandoc(
+        f"""
+        /*!
+         * script_hash  : {script_hash}
+         * tilemap_hash : {tilemap.tsx_hash}
+         */
+    """
+    )
 
 
 def main() -> None:
