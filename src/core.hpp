@@ -13,7 +13,7 @@ struct FlatArray {
     static constexpr int width = W;
     static constexpr int height = H;
 
-    std::array<T, W * H> inner{};
+    std::array<T, W * H> inner;
 
     [[nodiscard]] static bool in_bounds(int const x, int const y)
     {
