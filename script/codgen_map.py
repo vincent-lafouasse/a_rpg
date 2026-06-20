@@ -63,12 +63,20 @@ class Tilemap:
         # ----- end Metadata -----
 
     name: str
-    metadata: Metadata
+    metadata: Tilemap.Metadata
     tiles: list[int]
 
     @staticmethod
-    def parse(tmx_path: Path) -> Tilemap:
+    def load(tmx_path: Path) -> bytes:
+        assert tmx_path.suffix == ".tmx"
         pass
+
+    @staticmethod
+    def parse(tmx: bytes, name: str) -> Tilemap:
+        root = ...
+        meta = Metadata.parse(root)
+        tiles = foo(root, meta)
+        return Tilemap(name=name, metadata=meta, tiles=tiles)
 
 
 # primarily stored in the .tsx but worth double checking for consistency with
