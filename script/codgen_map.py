@@ -17,35 +17,25 @@ import os
 from pathlib import Path
 from lxml import etree
 
+SCRIPT_PATH = Path(__file__)
+SCRIPT_NAME = SCRIPT_PATH.parts[-1]
+
 
 ### ----- parsing the XML files that Tiled gave me
 
 
 @dataclasses.dataclass
 class Metadata:
-    script_name: str
     map_name: str
     width: int
     height: int
     tile_size: int
-    script_hash: str
-    map_hash: str
 
     @staticmethod
-    def read(root, script_path: Path, map_path: Path) -> Metadata:
-        script_name = script_path.parts[-1]
+    def read(root, map_path: Path) -> Metadata:
         map_name = map_path.parts[-1]
-        assert script_name[-3:] == ".py"
         assert map_name[-4:] == ".tmx"
-
-        script_basename = script_name[:-3]
         map_basename = map_name[:-4]
-
-        def sha256(path: Path) -> str:
-            return hashlib.sha256(path.read_bytes()).hexdigest()
-
-        script_hash = sha256(script_path)
-        map_hash = sha256(map_path)
 
         assert root.tag == "map"
         width = int(root.attrib["width"])
@@ -59,23 +49,17 @@ class Metadata:
         assert root.attrib["renderorder"] == "right-down"
 
         return Metadata(
-            script_name=script_basename,
             map_name=map_basename,
             width=width,
             height=height,
             tile_size=tile_size,
-            script_hash=script_hash,
-            map_hash=map_hash,
         )
 
     def log(self) -> None:
-        print(f"script:        {self.script_name}.py")
         print(f"map:           {self.map_name}")
         print(f"width:         {self.width}")
         print(f"height:        {self.height}")
         print(f"tile_size:     {self.tile_size}")
-        print(f"script_hash:   {self.script_hash}")
-        print(f"map_hash:      {self.map_hash}")
 
 
 # primarily stored in the .tsx but worth double checking for consistency with
@@ -161,6 +145,10 @@ def parse_layer(csv: str, metadata: Metadata) -> list[int]:
 ### ----- hashes and no-op detection
 
 
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
 def map_fingerprint(metadata: Metadata) -> str:
     return inspect.cleandoc(
         f"""
@@ -199,7 +187,7 @@ def main() -> None:
     map_path = Path(sys.argv[1])
 
     root = etree.parse(map_path).getroot()
-    metadata = Metadata.read(root, script_path, map_path)
+    metadata = Metadata.read(root, map_path)
     metadata.log()
     tileset = Tileset.read(root, map_path)
     tileset.log()
