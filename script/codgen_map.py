@@ -5,6 +5,8 @@
 # ]
 # ///
 
+# yes it all needs to be in 1 script because i use the hash of the script
+
 from __future__ import annotations
 
 import hashlib
