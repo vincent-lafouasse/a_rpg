@@ -183,7 +183,6 @@ def main() -> None:
         print(f"usage: uv run {sys.argv[0]} <map.tmx>", file=sys.stderr)
         sys.exit(1)
 
-    script_path = Path(__file__)
     map_path = Path(sys.argv[1])
 
     root = etree.parse(map_path).getroot()
