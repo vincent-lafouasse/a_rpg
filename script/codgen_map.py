@@ -23,6 +23,7 @@ THIS_SCRIPT = Path(__file__)
 ### ----- parsing the XML files that Tiled gave me
 
 
+@dataclasses.dataclass
 class Tilemap:
     @dataclasses.dataclass
     class Metadata:
@@ -60,6 +61,14 @@ class Tilemap:
             print(f"tile_size:     {self.tile_size}")
 
         # ----- end Metadata -----
+
+    name: str
+    metadata: Metadata
+    tiles: list[int]
+
+    @staticmethod
+    def parse(tmx_path: Path) -> Tilemap:
+        pass
 
 
 # primarily stored in the .tsx but worth double checking for consistency with
