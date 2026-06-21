@@ -109,7 +109,7 @@ class Tilemap:
         print(f"width:         {self.metadata.width}")
         print(f"height:        {self.metadata.height}")
         print(f"tile_size:     {self.metadata.tile_size}")
-        print(f"tiles:\n{self.tiles}")
+        print(f"-- tiles:\n{self.tiles}")
 
 
 # primarily stored in the .tsx but worth double checking for consistency with
