@@ -221,6 +221,10 @@ def main() -> None:
     tilemap = Tilemap.load(map_path)
     tilemap.log()
 
+    tileset_path = map_path.parent / tilemap.tileset_id
+    assert tileset_path.exists()
+    print(tileset_path)
+
 
 if __name__ == "__main__":
     main()
