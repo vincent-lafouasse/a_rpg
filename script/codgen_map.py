@@ -129,7 +129,6 @@ class Tilemap:
 class Tileset:
     name: str
     tile_size: int
-    tile_count: int
     columns: int
     source: Path
 
@@ -149,13 +148,13 @@ class Tileset:
         image_el = tsx_root.find("image")
         assert image_el is not None
 
-        source_pixel_width = int(image_el.attrib["width"]),
-        source_pixel_height = int(image_el.attrib["height"]),
+        source_pixel_width = (int(image_el.attrib["width"]),)
+        source_pixel_height = (int(image_el.attrib["height"]),)
+        tile_count = int(tsx_root.attrib["tilecount"])
 
         return Tileset(
             name=tsx_root.attrib["name"],
             tile_size=tilewidth,
-            tile_count=int(tsx_root.attrib["tilecount"]),
             columns=int(tsx_root.attrib["columns"]),
             source=(tsx_path.parent / image_el.attrib["source"]).resolve(),
         )
@@ -163,7 +162,6 @@ class Tileset:
     def log(self) -> None:
         print(f"tileset name:  {self.name}")
         print(f"tile_size:     {self.tile_size}")
-        print(f"tile_count:    {self.tile_count}")
         print(f"columns:       {self.columns}")
         print(f"source:        {self.source}")
 
