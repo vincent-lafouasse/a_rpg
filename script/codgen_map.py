@@ -78,7 +78,11 @@ class Tilemap:
     def identify_tileset(root) -> str:
         tilesets = root.findall("tileset")
         assert len(tilesets) == 1, f"expected 1 tileset, got {len(tilesets)}"
-        return tilesets[0].attrib["source"]
+
+        source = tilesets[0].attrib["source"]
+        assert source[-4:] == ".tsx"
+
+        return source
 
     @staticmethod
     def extract_layer_csv(root, metadata: Tilemap.Metadata) -> str:
