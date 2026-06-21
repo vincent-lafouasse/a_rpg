@@ -196,6 +196,10 @@ def main() -> None:
     tileset = Tileset.load(tileset_path)
     tileset.log()
 
+    # yes this is only meant to run on my machine
+    project_root = Path("/Users/poss/code/cpp/ff1")
+    print(project_root)
+
 
 if __name__ == "__main__":
     main()
