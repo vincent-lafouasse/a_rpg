@@ -3,6 +3,7 @@
 
 #include <raylib.h>
 
+#include "TilesetBank.hpp"
 #include "core.hpp"
 
 struct LogicalTile {
@@ -82,6 +83,9 @@ int main()
 {
     Renderer renderer;
     Map map;
+
+    TilesetBank tileset_bank;
+    (void)tileset_bank;
 
     while (!WindowShouldClose()) {
         renderer.render(map);
