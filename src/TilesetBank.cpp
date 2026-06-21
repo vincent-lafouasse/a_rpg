@@ -34,6 +34,7 @@ const Tileset& TilesetBank::at(const TilesetId tileset_id) const
             return tilesets[index];
     }
 
+    // should never go here if the pattern match is exhaustive
     std::fprintf(stderr, "Not a tileset id: %i\n",
                  static_cast<int>(tileset_id));
     std::exit(1);
