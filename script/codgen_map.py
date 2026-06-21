@@ -202,10 +202,9 @@ def codegen_tileset_bank(bank: list[Tileset], project_root: Path, outdir: Path) 
         id_source += "\n"
         id_source += inspect.cleandoc(
             f"""
-                COUNT
             }};
 
-            inline constexpr int k_tileset_number = static_cast<int>(TilesetId::COUNT);
+            inline constexpr int k_tileset_number = {len(bank)};
         """
         )
         id_source += "\n"
