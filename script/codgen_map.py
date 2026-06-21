@@ -210,32 +210,35 @@ def codegen_tileset_bank(bank: list[Tileset], project_root: Path, outdir: Path) 
         id_source += "\n"
         tileset_id_file.write(id_source)
 
+    with open(outdir / "tileset_assets.gen.inc", "w") as tileset_asset_file:
+        asset_source = ""
+        asset_source += inspect.cleandoc(
+            f"""
+            #include <array>
 
-#     with open(outdir / "Tileset.gen.h", "w") as header:
-#         header.write(
-#             inspect.cleandoc(
-#                 f"""
-#             #pragma once
-#
-#             /* clang-format off */
-#
-#             struct Tileset {{
-#                 const char* source;
-#                 int tile_size;
-#                 int columns;
-#             }};
-#
-#             inline constexpr Tileset k_tileset = {{
-#                 \"{tileset_source_rel}\",
-#                 {tileset.tile_size},
-#                 {tileset.columns},
-#             }};
-#
-#             /* clang-format on */
-#         """
-#             )
-#         )
-#         header.write("\n")
+            #include "TilesetBank.hpp"
+
+            struct TilesetAsset {{
+                const char* source;
+                int tile_size;
+                int columns;
+            }};
+
+            static constexpr std::array<TilesetAsset, TilesetBank::N> k_tileset_assets = {{
+        """
+        )
+        asset_source += "\n"
+
+        for tileset in bank:
+            asset_source += f"    {{ /* {tileset.name} */\n"
+            asset_source += f'         "{rel_source(tileset)}",\n'
+            asset_source += f"         {tileset.tile_size},\n"
+            asset_source += f"         {tileset.columns},\n"
+            asset_source += f"    }},\n"
+
+        asset_source += "};\n"
+
+        tileset_asset_file.write(asset_source)
 
 
 def main() -> None:
