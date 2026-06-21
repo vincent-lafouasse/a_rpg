@@ -180,6 +180,28 @@ class Tileset:
         print(f"source:        {self.source}")
 
 
+def codegen_tileset(tileset: Tileset, project_root: Path, outdir: Path) -> None:
+    tileset_source_rel = tileset.source.relative_to(project_root)
+
+    with open(outdir / "Tileset.gen.h", "w") as header:
+        header.write(
+            inspect.cleandoc(
+                """
+            #pragma once
+
+            struct Tileset {
+                const char* source;
+                int tile_size;
+                int columns;
+            };
+
+            extern const k_tileset;
+        """
+            )
+        )
+        header.write("\n")
+
+
 def main() -> None:
     if len(sys.argv) != 2:
         print(f"usage: uv run {sys.argv[0]} <map.tmx>", file=sys.stderr)
@@ -198,8 +220,9 @@ def main() -> None:
 
     # yes this is only meant to run on my machine
     project_root = Path("/Users/poss/code/cpp/ff1")
-    tileset_source_rel = tileset.source.relative_to(project_root)
-    print(tileset_source_rel)
+    outdir = project_root / "src"
+
+    codegen_tileset(tileset, project_root, outdir)
 
 
 if __name__ == "__main__":
