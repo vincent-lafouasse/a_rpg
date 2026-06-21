@@ -27,35 +27,11 @@ THIS_SCRIPT = Path(__file__)
 class Tilemap:
     @dataclasses.dataclass
     class Metadata:
-        map_name: str
         width: int
         height: int
         tile_size: int
 
-        @staticmethod
-        def read(root, map_path: Path) -> Metadata:
-            assert map_path.suffix == ".tmx"
-
-            assert root.tag == "map"
-            width = int(root.attrib["width"])
-            height = int(root.attrib["height"])
-            tilewidth = int(root.attrib["tilewidth"])
-            tileheight = int(root.attrib["tileheight"])
-            assert tilewidth == tileheight
-            tile_size = tilewidth
-
-            assert root.attrib["orientation"] == "orthogonal"
-            assert root.attrib["renderorder"] == "right-down"
-
-            return Tilemap.Metadata(
-                map_name=map_path.stem,
-                width=width,
-                height=height,
-                tile_size=tile_size,
-            )
-
         def log(self) -> None:
-            print(f"map:           {self.map_name}")
             print(f"width:         {self.width}")
             print(f"height:        {self.height}")
             print(f"tile_size:     {self.tile_size}")
@@ -69,14 +45,38 @@ class Tilemap:
     @staticmethod
     def load(tmx_path: Path) -> Tilemap:
         assert tmx_path.suffix == ".tmx"
-        pass
+        data = tmx_path.read_bytes()
+        return Tilemap.parse(data, tmx_path.stem)
 
     @staticmethod
     def parse(tmx: bytes, name: str) -> Tilemap:
-        root = ...
-        meta = Metadata.parse(root)
-        tiles = foo(root, meta)
+        root = etree.fromstring(tmx)
+        assert root.tag == "map"
+
+        meta = Tilemap.parse_metadata(root)
+        print(f"-- map:        {name}")
+        meta.log()
+
+        tiles = [0]
         return Tilemap(name=name, metadata=meta, tiles=tiles)
+
+    @staticmethod
+    def parse_metadata(root) -> Tilemap.Metadata:
+        width = int(root.attrib["width"])
+        height = int(root.attrib["height"])
+        tilewidth = int(root.attrib["tilewidth"])
+        tileheight = int(root.attrib["tileheight"])
+        assert tilewidth == tileheight
+        tile_size = tilewidth
+
+        assert root.attrib["orientation"] == "orthogonal"
+        assert root.attrib["renderorder"] == "right-down"
+
+        return Tilemap.Metadata(
+            width=width,
+            height=height,
+            tile_size=tile_size,
+        )
 
 
 # primarily stored in the .tsx but worth double checking for consistency with
@@ -202,15 +202,17 @@ def main() -> None:
 
     map_path = Path(sys.argv[1])
 
-    root = etree.parse(map_path).getroot()
-    metadata = Tilemap.Metadata.read(root, map_path)
-    metadata.log()
-    tileset = Tileset.read(root, map_path)
-    tileset.log()
-    layer_csv = extract_layer_csv(root, metadata)
-    layer = parse_layer(layer_csv, metadata)
-    print(f"layer csv:\n{layer_csv}")
-    print(f"layer: {layer}")
+    tilemap = Tilemap.load(map_path)
+
+    # root = etree.parse(map_path).getroot()
+    # metadata = Tilemap.Metadata.read(root, map_path)
+    # metadata.log()
+    # tileset = Tileset.read(root, map_path)
+    # tileset.log()
+    # layer_csv = extract_layer_csv(root, metadata)
+    # layer = parse_layer(layer_csv, metadata)
+    # print(f"layer csv:\n{layer_csv}")
+    # print(f"layer: {layer}")
 
 
 if __name__ == "__main__":
