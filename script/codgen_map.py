@@ -189,6 +189,8 @@ def codegen_tileset(tileset: Tileset, project_root: Path, outdir: Path) -> None:
                 f"""
             #pragma once
 
+            /* clang-format off */
+
             struct Tileset {{
                 const char* source;
                 int tile_size;
@@ -200,6 +202,8 @@ def codegen_tileset(tileset: Tileset, project_root: Path, outdir: Path) -> None:
                 {tileset.tile_size},
                 {tileset.columns},
             }};
+
+            /* clang-format on */
         """
             )
         )

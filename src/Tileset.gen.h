@@ -1,5 +1,7 @@
 #pragma once
 
+/* clang-format off */
+
 struct Tileset {
     const char* source;
     int tile_size;
@@ -11,3 +13,5 @@ inline constexpr Tileset k_tileset = {
     8,
     16,
 };
+
+/* clang-format on */
