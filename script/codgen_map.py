@@ -198,7 +198,8 @@ def main() -> None:
 
     # yes this is only meant to run on my machine
     project_root = Path("/Users/poss/code/cpp/ff1")
-    print(project_root)
+    tileset_source_rel = tileset.source.relative_to(project_root)
+    print(tileset_source_rel)
 
 
 if __name__ == "__main__":
