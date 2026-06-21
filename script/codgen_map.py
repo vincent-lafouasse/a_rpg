@@ -167,7 +167,7 @@ class Tileset:
         )
 
     def log(self) -> None:
-        print(f"tileset name:  {self.name}")
+        print(f"-- tileset:    {self.name}")
         print(f"tile_size:     {self.tile_size}")
         print(f"columns:       {self.columns}")
         print(f"source:        {self.source}")
