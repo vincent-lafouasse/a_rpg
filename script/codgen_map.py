@@ -186,16 +186,20 @@ def codegen_tileset(tileset: Tileset, project_root: Path, outdir: Path) -> None:
     with open(outdir / "Tileset.gen.h", "w") as header:
         header.write(
             inspect.cleandoc(
-                """
+                f"""
             #pragma once
 
-            struct Tileset {
+            struct Tileset {{
                 const char* source;
                 int tile_size;
                 int columns;
-            };
+            }};
 
-            extern const k_tileset;
+            inline constexpr Tileset k_tileset = {{
+                {tileset_source_rel},
+                {tileset.tile_size},
+                {tileset.columns},
+            }};
         """
             )
         )
