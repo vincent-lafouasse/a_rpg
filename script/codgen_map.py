@@ -34,6 +34,7 @@ class Tilemap:
     name: str
     metadata: Tilemap.Metadata
     tiles: list[int]
+    tileset_id: str
 
     @staticmethod
     def load(tmx_path: Path) -> Tilemap:
@@ -48,13 +49,12 @@ class Tilemap:
 
         meta = Tilemap.parse_metadata(root)
 
-        tileset = Tilemap.identify_tileset(root)
-        print(tileset)
+        tileset_id = Tilemap.identify_tileset(root)
 
         csv_payload = Tilemap.extract_layer_csv(root, meta)
         tiles = Tilemap.parse_layer(csv_payload, meta)
 
-        return Tilemap(name=name, metadata=meta, tiles=tiles)
+        return Tilemap(name=name, metadata=meta, tiles=tiles, tileset_id=tileset_id)
 
     @staticmethod
     def parse_metadata(root) -> Tilemap.Metadata:
@@ -122,6 +122,7 @@ class Tilemap:
         print(f"width:         {self.metadata.width}")
         print(f"height:        {self.metadata.height}")
         print(f"tile_size:     {self.metadata.tile_size}")
+        print(f"tileset:       {self.tileset_id}")
         print(f"-- tiles:\n{self.tiles}")
 
 
