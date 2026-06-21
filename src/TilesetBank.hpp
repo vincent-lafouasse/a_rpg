@@ -2,10 +2,16 @@
 
 #include <vector>
 
+#include <raylib.h>
+
 #include "tileset_ids.gen.hpp"
 
 // dumb struct, does not manage its lifetime
-struct Tileset {};
+struct Tileset {
+    Texture2D texture;
+    int tile_size;
+    int columns;
+};
 
 // manages the tileset lifetimes
 struct TilesetBank {
