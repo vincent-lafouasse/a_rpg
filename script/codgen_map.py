@@ -146,6 +146,7 @@ class Tileset:
         tilewidth = int(root.attrib["tilewidth"])
         tileheight = int(root.attrib["tileheight"])
         assert tilewidth == tileheight
+        tile_size = tilewidth
 
         columns = int(root.attrib["columns"])
 
@@ -155,13 +156,19 @@ class Tileset:
         source = (dir / image_el.attrib["source"]).resolve()
         assert source.exists()
 
-        source_pixel_width = (int(image_el.attrib["width"]),)
-        source_pixel_height = (int(image_el.attrib["height"]),)
+        # some sanity checks
         tile_count = int(root.attrib["tilecount"])
+        width = columns
+        height = tile_count / width
+        source_pixel_width = int(image_el.attrib["width"])
+        source_pixel_height = int(image_el.attrib["height"])
+
+        assert width * tile_size <= source_pixel_width
+        assert height * tile_size <= source_pixel_height
 
         return Tileset(
             name=root.attrib["name"],
-            tile_size=tilewidth,
+            tile_size=tile_size,
             columns=columns,
             source=source,
         )
