@@ -196,10 +196,9 @@ def codegen_tileset_bank(bank: list[Tileset], project_root: Path, outdir: Path) 
             enum class TilesetId : int {{
         """
         )
-        for i, tileset in enumerate(bank):
-            id_source += "\n"
-            id_source += f"    {tileset.name} = {i},"
         id_source += "\n"
+        for i, tileset in enumerate(bank):
+            id_source += f"    {tileset.name} = {i},\n"
         id_source += inspect.cleandoc(
             f"""
             }};
