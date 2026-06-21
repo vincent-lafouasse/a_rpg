@@ -180,34 +180,63 @@ class Tileset:
         print(f"source:        {self.source}")
 
 
-def codegen_tileset(tileset: Tileset, project_root: Path, outdir: Path) -> None:
-    tileset_source_rel = tileset.source.relative_to(project_root)
+def codegen_tileset_bank(bank: list[Tileset], project_root: Path, outdir: Path) -> None:
+    def rel_source(tileset):
+        return tileset.source.relative_to(project_root)
 
-    with open(outdir / "Tileset.gen.h", "w") as header:
-        header.write(
-            inspect.cleandoc(
-                f"""
+    bank = sorted(bank)
+    name_bank = [(tileset.name, tileset) for tileset in bank]
+
+    with open(outdir / "tileset_ids.gen.hpp", "w") as tileset_id_file:
+        id_source = ""
+        id_source += inspect.cleandoc(
+            f"""
             #pragma once
 
-            /* clang-format off */
-
-            struct Tileset {{
-                const char* source;
-                int tile_size;
-                int columns;
-            }};
-
-            inline constexpr Tileset k_tileset = {{
-                \"{tileset_source_rel}\",
-                {tileset.tile_size},
-                {tileset.columns},
-            }};
-
-            /* clang-format on */
+            enum class TilesetId : int {{
         """
-            )
         )
-        header.write("\n")
+        for i, tileset in enumerate(bank):
+            id_source += "\n"
+            id_source += f"    {tileset.name} = {i},"
+        id_source += "\n"
+        id_source += inspect.cleandoc(
+            f"""
+                COUNT
+            }};
+
+            inline constexpr int k_tileset_number = static_cast<int>(TilesetId::COUNT);
+        """
+        )
+        id_source += "\n"
+        tileset_id_file.write(id_source)
+
+
+#     with open(outdir / "Tileset.gen.h", "w") as header:
+#         header.write(
+#             inspect.cleandoc(
+#                 f"""
+#             #pragma once
+#
+#             /* clang-format off */
+#
+#             struct Tileset {{
+#                 const char* source;
+#                 int tile_size;
+#                 int columns;
+#             }};
+#
+#             inline constexpr Tileset k_tileset = {{
+#                 \"{tileset_source_rel}\",
+#                 {tileset.tile_size},
+#                 {tileset.columns},
+#             }};
+#
+#             /* clang-format on */
+#         """
+#             )
+#         )
+#         header.write("\n")
 
 
 def main() -> None:
@@ -218,19 +247,19 @@ def main() -> None:
     map_path = Path(sys.argv[1])
 
     tilemap = Tilemap.load(map_path)
-    tilemap.log()
 
     tileset_path = map_path.parent / tilemap.tileset_id
     assert tileset_path.exists()
 
     tileset = Tileset.load(tileset_path)
-    tileset.log()
+
+    tileset_bank = [tileset]
 
     # yes this is only meant to run on my machine
     project_root = Path("/Users/poss/code/cpp/ff1")
     outdir = project_root / "src"
 
-    codegen_tileset(tileset, project_root, outdir)
+    codegen_tileset_bank(tileset_bank, project_root, outdir)
 
 
 if __name__ == "__main__":
