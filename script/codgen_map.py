@@ -207,16 +207,6 @@ def main() -> None:
     tilemap = Tilemap.load(map_path)
     tilemap.log()
 
-    # root = etree.parse(map_path).getroot()
-    # metadata = Tilemap.Metadata.read(root, map_path)
-    # metadata.log()
-    # tileset = Tileset.read(root, map_path)
-    # tileset.log()
-    # layer_csv = extract_layer_csv(root, metadata)
-    # layer = parse_layer(layer_csv, metadata)
-    # print(f"layer csv:\n{layer_csv}")
-    # print(f"layer: {layer}")
-
 
 if __name__ == "__main__":
     main()
