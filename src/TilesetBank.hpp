@@ -14,14 +14,18 @@ struct Tileset {
 };
 
 // manages the tileset lifetimes
-struct TilesetBank {
+class TilesetBank {
+   public:
     TilesetBank();
     TilesetBank(const TilesetBank&) = delete;
     TilesetBank(const TilesetBank&&) = delete;
     TilesetBank& operator=(const TilesetBank&) = delete;
     ~TilesetBank();
 
+    const Tileset& at(const TilesetId tileset_id) const;
+
     static constexpr int N = k_tileset_number;
 
+   private:
     std::vector<Tileset> tilesets;
 };

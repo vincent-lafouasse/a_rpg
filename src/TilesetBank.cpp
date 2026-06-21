@@ -24,3 +24,17 @@ TilesetBank::~TilesetBank()
         UnloadTexture(tileset.texture);
     }
 }
+
+const Tileset& TilesetBank::at(const TilesetId tileset_id) const
+{
+    const auto index = static_cast<size_t>(tileset_id);
+
+    switch (tileset_id) {
+        case TilesetId::colored_tilemap_packed:
+            return tilesets[index];
+    }
+
+    std::fprintf(stderr, "Not a tileset id: %i\n",
+                 static_cast<int>(tileset_id));
+    std::exit(1);
+}
