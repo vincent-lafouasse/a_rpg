@@ -240,6 +240,29 @@ def codegen_tileset_bank(bank: list[Tileset], project_root: Path, outdir: Path) 
         tileset_asset_file.write(asset_source)
 
 
+def codegen_tilemap(map: Tilemap, bank: list[Tileset], outdir: Path) -> None:
+    bank = sorted(bank)
+    name_bank = [(tileset.name, tileset) for tileset in bank]
+
+    with open(outdir / "tileset_ids.gen.hpp", "w") as tileset_id_file:
+        header_source = ""
+        header_source += inspect.cleandoc(
+            f"""
+            #pragma once
+
+            #include "core.hpp"
+            #include "tileset_ids.gen.hpp"
+
+            struct Tilemap {{
+                using Offset = uint16_t;
+
+                FlatArray<Offset, {map.metadata.width}, {map.metadata.height}> tiles;
+            }};
+        """
+        )
+        header_source += "\n"
+
+
 def main() -> None:
     if len(sys.argv) != 2:
         print(f"usage: uv run {sys.argv[0]} <map.tmx>", file=sys.stderr)
