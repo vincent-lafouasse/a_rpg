@@ -244,7 +244,7 @@ def codegen_tilemap(map: Tilemap, bank: list[Tileset], outdir: Path) -> None:
     bank = sorted(bank)
     name_bank = [(tileset.name, tileset) for tileset in bank]
 
-    with open(outdir / "tileset_ids.gen.hpp", "w") as tileset_id_file:
+    with open(outdir / "Tilemap.gen.hpp", "w") as header:
         header_source = ""
         header_source += inspect.cleandoc(
             f"""
