@@ -31,13 +31,6 @@ class Tilemap:
         height: int
         tile_size: int
 
-        def log(self) -> None:
-            print(f"width:         {self.width}")
-            print(f"height:        {self.height}")
-            print(f"tile_size:     {self.tile_size}")
-
-        # ----- end Metadata -----
-
     name: str
     metadata: Tilemap.Metadata
     tiles: list[int]
@@ -54,10 +47,10 @@ class Tilemap:
         assert root.tag == "map"
 
         meta = Tilemap.parse_metadata(root)
-        print(f"-- map:        {name}")
-        meta.log()
 
-        tiles = [0]
+        csv_payload = Tilemap.extract_layer_csv(root, meta)
+        tiles = Tilemap.parse_layer(csv_payload, meta)
+
         return Tilemap(name=name, metadata=meta, tiles=tiles)
 
     @staticmethod
@@ -77,6 +70,46 @@ class Tilemap:
             height=height,
             tile_size=tile_size,
         )
+
+    @staticmethod
+    def extract_layer_csv(root, metadata: Tilemap.Metadata) -> str:
+        layers = root.findall("layer")
+        assert len(layers) == 1, f"expected 1 layer, got {len(layers)}"
+
+        layer = layers[0]
+        assert int(layer.attrib["width"]) == metadata.width
+        assert int(layer.attrib["height"]) == metadata.height
+
+        data_el = layer.find("data")
+        assert data_el is not None
+        assert data_el.attrib.get("encoding") == "csv"
+
+        return data_el.text.strip()
+
+    @staticmethod
+    def parse_layer(csv: str, metadata: Metadata) -> list[int]:
+        rows = [
+            [int(v) for v in row.split(",") if v.strip()] for row in csv.splitlines()
+        ]
+
+        assert (
+            len(rows) == metadata.height
+        ), f"expected {metadata.height} rows, got {len(rows)}"
+        for i, row in enumerate(rows):
+            assert (
+                len(row) == metadata.width
+            ), f"row {i}: expected {metadata.width} cols, got {len(row)}"
+            for v in row:
+                assert 0 <= v <= 0xFFFF, f"row {i}: value {v} does not fit in u16"
+
+        return [v for row in rows for v in row]
+
+    def log(self) -> None:
+        print(f"-- map:        {self.name}")
+        print(f"width:         {self.metadata.width}")
+        print(f"height:        {self.metadata.height}")
+        print(f"tile_size:     {self.metadata.tile_size}")
+        print(f"tiles:\n{self.tiles}")
 
 
 # primarily stored in the .tsx but worth double checking for consistency with
@@ -128,37 +161,6 @@ class Tileset:
         print(f"px size:       {self.source_pixel_width}x{self.source_pixel_height}")
 
 
-def extract_layer_csv(tmx_root, metadata: Metadata) -> str:
-    layers = tmx_root.findall("layer")
-    assert len(layers) == 1, f"expected 1 layer, got {len(layers)}"
-
-    layer = layers[0]
-    assert int(layer.attrib["width"]) == metadata.width
-    assert int(layer.attrib["height"]) == metadata.height
-
-    data_el = layer.find("data")
-    assert data_el is not None
-    assert data_el.attrib.get("encoding") == "csv"
-
-    return data_el.text.strip()
-
-
-def parse_layer(csv: str, metadata: Metadata) -> list[int]:
-    rows = [[int(v) for v in row.split(",") if v.strip()] for row in csv.splitlines()]
-
-    assert (
-        len(rows) == metadata.height
-    ), f"expected {metadata.height} rows, got {len(rows)}"
-    for i, row in enumerate(rows):
-        assert (
-            len(row) == metadata.width
-        ), f"row {i}: expected {metadata.width} cols, got {len(row)}"
-        for v in row:
-            assert 0 <= v <= 0xFFFF, f"row {i}: value {v} does not fit in u16"
-
-    return [v for row in rows for v in row]
-
-
 ### ----- hashes and no-op detection
 
 
@@ -203,6 +205,7 @@ def main() -> None:
     map_path = Path(sys.argv[1])
 
     tilemap = Tilemap.load(map_path)
+    tilemap.log()
 
     # root = etree.parse(map_path).getroot()
     # metadata = Tilemap.Metadata.read(root, map_path)
