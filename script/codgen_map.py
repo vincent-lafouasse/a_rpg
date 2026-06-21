@@ -256,7 +256,8 @@ def codegen_tilemap(map: Tilemap, bank: list[Tileset], outdir: Path) -> None:
             struct Tilemap {{
                 using Offset = uint16_t;
 
-                FlatArray<Offset, {map.metadata.width}, {map.metadata.height}> tiles;
+                // this is a reference to a generated static constexpr array
+                FlatArray<Offset, {map.metadata.width}, {map.metadata.height}>& tiles;
             }};
         """
         )
