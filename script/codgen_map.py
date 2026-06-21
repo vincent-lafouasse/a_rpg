@@ -136,33 +136,34 @@ class Tileset:
     def load(tsx_path: Path) -> Tileset:
         assert tsx_path.suffix == ".tsx"
         data = tsx_path.read_bytes()
-        return Tileset.parse(data)
+        return Tileset.parse(data, tsx_path.parent)
 
     @staticmethod
-    def read(tmx_root, map_path: Path) -> Tileset:
-        tileset_el = tmx_root.find("tileset")
-        assert tileset_el is not None
-        tsx_path = map_path.parent / tileset_el.attrib["source"]
+    def parse(tsx: bytes, dir: Path) -> Tileset:
+        root = etree.fromstring(tsx)
+        assert root.tag == "tileset"
 
-        tsx_root = etree.parse(tsx_path).getroot()
-        assert tsx_root.tag == "tileset"
-
-        tilewidth = int(tsx_root.attrib["tilewidth"])
-        tileheight = int(tsx_root.attrib["tileheight"])
+        tilewidth = int(root.attrib["tilewidth"])
+        tileheight = int(root.attrib["tileheight"])
         assert tilewidth == tileheight
 
-        image_el = tsx_root.find("image")
+        columns = int(root.attrib["columns"])
+
+        image_el = root.find("image")
         assert image_el is not None
+
+        source = (dir / image_el.attrib["source"]).resolve()
+        assert source.exists()
 
         source_pixel_width = (int(image_el.attrib["width"]),)
         source_pixel_height = (int(image_el.attrib["height"]),)
-        tile_count = int(tsx_root.attrib["tilecount"])
+        tile_count = int(root.attrib["tilecount"])
 
         return Tileset(
-            name=tsx_root.attrib["name"],
+            name=root.attrib["name"],
             tile_size=tilewidth,
-            columns=int(tsx_root.attrib["columns"]),
-            source=(tsx_path.parent / image_el.attrib["source"]).resolve(),
+            columns=columns,
+            source=source,
         )
 
     def log(self) -> None:
@@ -184,6 +185,9 @@ def main() -> None:
 
     tileset_path = map_path.parent / tilemap.tileset_id
     assert tileset_path.exists()
+
+    tileset = Tileset.load(tileset_path)
+    tileset.log()
 
 
 if __name__ == "__main__":
