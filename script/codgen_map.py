@@ -67,7 +67,7 @@ class Tilemap:
     tiles: list[int]
 
     @staticmethod
-    def load(tmx_path: Path) -> bytes:
+    def load(tmx_path: Path) -> Tilemap:
         assert tmx_path.suffix == ".tmx"
         pass
 
