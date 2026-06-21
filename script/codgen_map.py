@@ -223,7 +223,7 @@ def codegen_tileset_bank(bank: list[Tileset], project_root: Path, outdir: Path) 
                 int columns;
             }};
 
-            static constexpr std::array<TilesetAsset, TilesetBank::N> k_tileset_assets = {{
+            static constexpr std::array<TilesetAsset, TilesetBank::N> k_tileset_assets = {{{{
         """
         )
         asset_source += "\n"
@@ -235,7 +235,7 @@ def codegen_tileset_bank(bank: list[Tileset], project_root: Path, outdir: Path) 
             asset_source += f"         {tileset.columns},\n"
             asset_source += f"    }},\n"
 
-        asset_source += "};\n"
+        asset_source += "}};\n"
 
         tileset_asset_file.write(asset_source)
 
