@@ -9,15 +9,12 @@
 
 from __future__ import annotations
 
-import hashlib
 import dataclasses
 import sys
 import inspect
 import os
 from pathlib import Path
 from lxml import etree
-
-THIS_SCRIPT = Path(__file__)
 
 
 ### ----- parsing the XML files that Tiled gave me
@@ -137,7 +134,6 @@ class Tileset:
     source: Path
     source_pixel_width: int
     source_pixel_height: int
-    tsx_hash: str
 
     @staticmethod
     def read(tmx_root, map_path: Path) -> Tileset:
@@ -163,7 +159,6 @@ class Tileset:
             source=(tsx_path.parent / image_el.attrib["source"]).resolve(),
             source_pixel_width=int(image_el.attrib["width"]),
             source_pixel_height=int(image_el.attrib["height"]),
-            tsx_hash=hashlib.sha256(tsx_path.read_bytes()).hexdigest(),
         )
 
     def log(self) -> None:
@@ -173,42 +168,6 @@ class Tileset:
         print(f"columns:       {self.columns}")
         print(f"source:        {self.source}")
         print(f"px size:       {self.source_pixel_width}x{self.source_pixel_height}")
-
-
-### ----- hashes and no-op detection
-
-
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-def map_fingerprint(metadata: Metadata) -> str:
-    return inspect.cleandoc(
-        f"""
-        /*!
-         * script_hash : {metadata.script_hash}
-         * map_hash    : {metadata.map_hash}
-         */
-    """
-    )
-
-
-def tileset_fingerprint(tileset: Tileset, script_hash: str) -> str:
-    return inspect.cleandoc(
-        f"""
-        /*!
-         * script_hash  : {script_hash}
-         * tileset_hash : {tileset.tsx_hash}
-         */
-    """
-    )
-
-
-def check_fingerprint(path: Path, fingerprint: str) -> bool:
-    if not path.exists():
-        return False
-    lines = path.read_text().splitlines()[:4]
-    return "\n".join(lines) == fingerprint
 
 
 def main() -> None:
