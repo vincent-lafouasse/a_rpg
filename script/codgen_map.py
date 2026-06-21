@@ -48,6 +48,9 @@ class Tilemap:
 
         meta = Tilemap.parse_metadata(root)
 
+        tileset = Tilemap.identify_tileset(root)
+        print(tileset)
+
         csv_payload = Tilemap.extract_layer_csv(root, meta)
         tiles = Tilemap.parse_layer(csv_payload, meta)
 
@@ -70,6 +73,12 @@ class Tilemap:
             height=height,
             tile_size=tile_size,
         )
+
+    @staticmethod
+    def identify_tileset(root) -> str:
+        tilesets = root.findall("tileset")
+        assert len(tilesets) == 1, f"expected 1 tileset, got {len(tilesets)}"
+        return tilesets[0].attrib["source"]
 
     @staticmethod
     def extract_layer_csv(root, metadata: Tilemap.Metadata) -> str:
