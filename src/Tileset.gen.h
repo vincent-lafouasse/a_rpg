@@ -7,7 +7,7 @@ struct Tileset {
 };
 
 inline constexpr Tileset k_tileset = {
-    assets/sprites/kenney_micro-roguelike/Tilemap/colored_tilemap_packed.png,
+    "assets/sprites/kenney_micro-roguelike/Tilemap/colored_tilemap_packed.png",
     8,
     16,
 };

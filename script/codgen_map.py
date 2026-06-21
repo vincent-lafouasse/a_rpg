@@ -196,7 +196,7 @@ def codegen_tileset(tileset: Tileset, project_root: Path, outdir: Path) -> None:
             }};
 
             inline constexpr Tileset k_tileset = {{
-                {tileset_source_rel},
+                \"{tileset_source_rel}\",
                 {tileset.tile_size},
                 {tileset.columns},
             }};
