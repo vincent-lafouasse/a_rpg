@@ -132,8 +132,6 @@ class Tileset:
     tile_count: int
     columns: int
     source: Path
-    source_pixel_width: int
-    source_pixel_height: int
 
     @staticmethod
     def read(tmx_root, map_path: Path) -> Tileset:
@@ -151,14 +149,15 @@ class Tileset:
         image_el = tsx_root.find("image")
         assert image_el is not None
 
+        source_pixel_width = int(image_el.attrib["width"]),
+        source_pixel_height = int(image_el.attrib["height"]),
+
         return Tileset(
             name=tsx_root.attrib["name"],
             tile_size=tilewidth,
             tile_count=int(tsx_root.attrib["tilecount"]),
             columns=int(tsx_root.attrib["columns"]),
             source=(tsx_path.parent / image_el.attrib["source"]).resolve(),
-            source_pixel_width=int(image_el.attrib["width"]),
-            source_pixel_height=int(image_el.attrib["height"]),
         )
 
     def log(self) -> None:
@@ -167,7 +166,6 @@ class Tileset:
         print(f"tile_count:    {self.tile_count}")
         print(f"columns:       {self.columns}")
         print(f"source:        {self.source}")
-        print(f"px size:       {self.source_pixel_width}x{self.source_pixel_height}")
 
 
 def main() -> None:
