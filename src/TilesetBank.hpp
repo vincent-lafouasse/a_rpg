@@ -15,11 +15,11 @@ struct Tileset {
 
 // manages the tileset lifetimes
 struct TilesetBank {
-    TilesetBank() {}
+    TilesetBank();
     TilesetBank(const TilesetBank&) = delete;
     TilesetBank(const TilesetBank&&) = delete;
     TilesetBank& operator=(const TilesetBank&) = delete;
-    ~TilesetBank() {}
+    ~TilesetBank();
 
     static constexpr int N = k_tileset_number;
 
