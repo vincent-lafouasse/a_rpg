@@ -133,6 +133,12 @@ class Tileset:
     source: Path
 
     @staticmethod
+    def load(tsx_path: Path) -> Tileset:
+        assert tsx_path.suffix == ".tsx"
+        data = tsx_path.read_bytes()
+        return Tileset.parse(data)
+
+    @staticmethod
     def read(tmx_root, map_path: Path) -> Tileset:
         tileset_el = tmx_root.find("tileset")
         assert tileset_el is not None
