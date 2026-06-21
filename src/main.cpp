@@ -85,7 +85,6 @@ int main()
     Map map;
 
     TilesetBank tileset_bank;
-    (void)tileset_bank;
 
     while (!WindowShouldClose()) {
         renderer.render(map);
