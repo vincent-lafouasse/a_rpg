@@ -3,6 +3,7 @@
 
 #include <raylib.h>
 
+#include "Tilemap.hpp"
 #include "TilesetBank.hpp"
 #include "core.hpp"
 
@@ -85,6 +86,9 @@ int main()
     Map map;
 
     TilesetBank tileset_bank;
+
+    Tilemap tilemap;
+    (void)tilemap;
 
     while (!WindowShouldClose()) {
         renderer.render(map);
