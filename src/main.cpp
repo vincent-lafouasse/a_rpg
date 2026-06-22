@@ -41,8 +41,12 @@ class Renderer {
                     static_cast<size_t>(col + row * map.width);
                 const uint16_t tile = map.tiles[tile_offset];
 
-                const float src_tile_y = FLOAT(tile / tileset.columns);
-                const float src_tile_x = FLOAT(tile % tileset.columns);
+                const uint16_t tile_idx =
+                    tile - 1;  // Tiled uses 1-based tile IDs
+                const float src_tile_y =
+                    FLOAT((tile_idx / tileset.columns) * tileset.tile_size);
+                const float src_tile_x =
+                    FLOAT((tile_idx % tileset.columns) * tileset.tile_size);
                 const float src_tile_size = FLOAT(tileset.tile_size);
 
                 Rectangle src{src_tile_x, src_tile_y, src_tile_size,
