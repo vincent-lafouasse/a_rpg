@@ -2,7 +2,7 @@
 
 #include <array>
 
-// #include "tilemap_data.gen.cin
+#include "tilemap_data.gen.inc"
 
 // some random data to make sure i can hold a span to static data
 static constexpr std::size_t N = 3;
@@ -14,6 +14,8 @@ template <std::size_t N>
 std::span<const Tilemap::TileOffset> as_span(
     const std::array<const Tilemap::TileOffset, N> data)
 {
+    // i'm going to trash this function anyways
+    foo();
     return std::span(data);
 }
 }  // namespace
