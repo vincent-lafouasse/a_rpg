@@ -114,6 +114,14 @@ class Tilemap:
 
         return [v for row in rows for v in row]
 
+    def format_tiles(self) -> str:
+        width = self.metadata.width
+        col_width = max(len(str(v)) for v in self.tiles)
+        rows = [
+            self.tiles[i * width : (i + 1) * width] for i in range(self.metadata.height)
+        ]
+        return "\n".join(" ".join(f"{v:{col_width}d}," for v in row) for row in rows)
+
     def log(self) -> None:
         print(f"-- map:        {self.name}")
         print(f"width:         {self.metadata.width}")
