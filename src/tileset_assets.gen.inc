@@ -1,3 +1,5 @@
+// -*- mode: c++ -*- vim: ft=cpp
+
 #include <array>
 
 #include "TilesetBank.hpp"

@@ -213,6 +213,8 @@ def codegen_tileset_bank(bank: list[Tileset], project_root: Path, outdir: Path) 
         asset_source = ""
         asset_source += inspect.cleandoc(
             f"""
+            // -*- mode: c++ -*- vim: ft=cpp
+
             #include <array>
 
             #include "TilesetBank.hpp"
