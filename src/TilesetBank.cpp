@@ -9,7 +9,9 @@ static Tileset tileset_from_specs(const TilesetAsset& asset)
     return {texture, asset.tile_size, asset.columns};
 }
 
-TilesetBank::TilesetBank() : tilesets()
+TilesetBank::TilesetBank() : tilesets() {}
+
+void TilesetBank::initialize()
 {
     tilesets.reserve(N);
 

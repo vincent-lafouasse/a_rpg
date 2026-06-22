@@ -22,6 +22,8 @@ class TilesetBank {
     TilesetBank& operator=(const TilesetBank&) = delete;
     ~TilesetBank();
 
+    void initialize();
+
     const Tileset& at(const TilesetId tileset_id) const;
 
     static constexpr int N = k_tileset_number;
