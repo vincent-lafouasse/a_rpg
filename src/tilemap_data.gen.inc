@@ -10,7 +10,7 @@ static constexpr int k_tilemap_width = 10;
 static constexpr int k_tilemap_tile_size = 8;
 static constexpr TilesetId k_tilemap_tileset = TilesetId::colored_tilemap_packed;
 
-static constexpr std::array<uint16_t, k_tilemap_height * k_tilemap_width> tile_data = {
+static constexpr std::array<uint16_t, k_tilemap_height * k_tilemap_width> k_tile_data = {
     125, 125, 125, 125, 125, 125, 125, 125, 125, 125,
     141, 141, 141, 141, 141, 141, 141, 141, 141, 141,
     141, 141, 141, 141, 141, 141, 141, 141, 141, 141,
