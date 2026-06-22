@@ -251,7 +251,37 @@ def codegen_tileset_bank(bank: list[Tileset], project_root: Path, outdir: Path) 
 
 
 def codegen_tilemap(map: Tilemap, bank: list[Tileset], outdir: Path) -> None:
-    pass
+    # TODO: store stem and not basename
+    tileset_id = map.tileset_id[:-4]
+
+    with open(outdir / "tilemap_data.gen.inc", "w") as tilemap_data:
+        data = ""
+        data += inspect.cleandoc(
+            f"""
+            // -*- mode: c++ -*- vim: ft=cpp
+
+            #include <array>
+            #include <cstdint>
+
+            #include "tileset_ids.gen.hpp"
+
+            static constexpr int k_tilemap_height = {map.metadata.height};
+            static constexpr int k_tilemap_width = {map.metadata.width};
+            static constexpr int k_tilemap_tile_size = {map.metadata.tile_size};
+            static constexpr TilesetId k_tilemap_tileset = TilesetId::{tileset_id};
+        """
+        )
+        data += "\n\n"
+        initializer = map.format_tiles()
+        lines = initializer.split("\n")
+        lines = ["    " + line for line in lines]
+        initializer = "\n".join(lines)
+
+        data += f"static constexpr std::array<uint16_t, k_tilemap_height * k_tilemap_width> k_tile_data = {{\n"
+        data += initializer
+        data += "\n};\n"
+        tilemap_data.write(data)
+
 
 def main() -> None:
     if len(sys.argv) != 2:
@@ -274,6 +304,7 @@ def main() -> None:
     outdir = project_root / "src"
 
     codegen_tileset_bank(tileset_bank, project_root, outdir)
+    codegen_tilemap(tilemap, project_root, outdir)
 
 
 if __name__ == "__main__":
