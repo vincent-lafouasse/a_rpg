@@ -251,29 +251,7 @@ def codegen_tileset_bank(bank: list[Tileset], project_root: Path, outdir: Path) 
 
 
 def codegen_tilemap(map: Tilemap, bank: list[Tileset], outdir: Path) -> None:
-    bank = sorted(bank)
-    name_bank = [(tileset.name, tileset) for tileset in bank]
-
-    with open(outdir / "Tilemap.gen.hpp", "w") as header:
-        header_source = ""
-        header_source += inspect.cleandoc(
-            f"""
-            #pragma once
-
-            #include "core.hpp"
-            #include "tileset_ids.gen.hpp"
-
-            struct Tilemap {{
-                using Offset = uint16_t;
-
-                // this is a reference to a generated static constexpr array
-                // so no lifetime problems
-                FlatArray<Offset, {map.metadata.width}, {map.metadata.height}>& tiles;
-            }};
-        """
-        )
-        header_source += "\n"
-
+    pass
 
 def main() -> None:
     if len(sys.argv) != 2:
