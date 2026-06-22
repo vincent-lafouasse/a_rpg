@@ -7,24 +7,6 @@
 #include "TilesetBank.hpp"
 #include "core.hpp"
 
-struct LogicalTile {
-    bool traversable;
-};
-
-struct VisualTile {
-    uint32_t offset;
-    uint32_t tile_size;
-};
-
-class Map {
-   public:
-    using Line = std::vector<int>;
-    using Layer = std::vector<Line>;
-
-    static constexpr int width = 10;
-    static constexpr int height = 5;
-};
-
 class Renderer {
    public:
     static constexpr int s_tile_size = 64;
@@ -32,44 +14,46 @@ class Renderer {
    private:
     static constexpr const char* s_window_name = "rpg";
     static constexpr int s_target_fps = 60;
-    static constexpr std::string_view s_sprite_dir = "assets/sprites/";
-    static constexpr int s_window_width = s_tile_size * Map::width;
-    static constexpr int s_window_height = s_tile_size * Map::height;
+
+    // temporary hardcoding
+    static constexpr int s_window_width = s_tile_size * 10;
+    static constexpr int s_window_height = s_tile_size * 5;
 
    public:
-    Renderer() : m_tile()
+    Renderer() : m_tileset_bank()
     {
         InitWindow(s_window_width, s_window_height, s_window_name);
         SetTargetFPS(s_target_fps);
-
-        const std::string sprite_dir{s_sprite_dir};
-        const std::string tile_dir =
-            sprite_dir + "kenney_micro-roguelike/Tiles/Colored/";
-        const std::string tile_path = tile_dir + "tile_0000.png";
-        m_tile = LoadTexture(tile_path.c_str());
+        m_tileset_bank.initialize();
     }
-    ~Renderer()
-    {
-        UnloadTexture(m_tile);
-        CloseWindow();
-    }
+    ~Renderer() { CloseWindow(); }
 
-    void render(const Map& map) const
+    void render(const Tilemap& map) const
     {
-        (void)map;  // not actually using a map yet, just spamming a tile
+        const Tileset& tileset = m_tileset_bank.at(map.tileset_id);
+
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
-        for (int row = 0; row < Map::height; ++row) {
-            for (int col = 0; col < Map::width; ++col) {
-                Rectangle src{0, 0, FLOAT(m_tile.width), FLOAT(m_tile.height)};
+        for (int row = 0; row < map.height; ++row) {
+            for (int col = 0; col < map.width; ++col) {
+                const size_t tile_offset =
+                    static_cast<size_t>(col + row * map.height);
+                const uint16_t tile = map.tiles[tile_offset];
+
+                const float src_tile_y = FLOAT(tile / tileset.columns);
+                const float src_tile_x = FLOAT(tile % tileset.columns);
+                const float src_tile_size = FLOAT(tileset.tile_size);
+
+                Rectangle src{src_tile_x, src_tile_y, src_tile_size,
+                              src_tile_size};
                 Rectangle dst{
                     FLOAT(col * s_tile_size),
                     FLOAT(row * s_tile_size),
                     FLOAT(s_tile_size),
                     FLOAT(s_tile_size),
                 };
-                DrawTexturePro(m_tile, src, dst, {0, 0}, 0.0f, WHITE);
+                DrawTexturePro(tileset.texture, src, dst, {0, 0}, 0.0f, WHITE);
             }
         }
 
@@ -77,20 +61,16 @@ class Renderer {
     }
 
    private:
-    Texture2D m_tile;
+    TilesetBank m_tileset_bank;
 };
 
 int main()
 {
     Renderer renderer;
-    Map map;
-
-    TilesetBank tileset_bank;
 
     Tilemap tilemap;
-    (void)tilemap;
 
     while (!WindowShouldClose()) {
-        renderer.render(map);
+        renderer.render(tilemap);
     }
 }
