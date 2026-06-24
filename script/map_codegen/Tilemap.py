@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import dataclasses
 import sys
+from pathlib import Path
 from lxml import etree
 
 
@@ -16,6 +17,7 @@ class Tilemap:
     name: str
     metadata: Tilemap.Metadata
     tiles: list[int]
+    terrain: list[int]
     tileset_id: str
 
     @staticmethod
@@ -30,13 +32,22 @@ class Tilemap:
         assert root.tag == "map"
 
         meta = Tilemap.parse_metadata(root)
-
         tileset_id = Tilemap.identify_tileset(root)
 
-        csv_payload = Tilemap.extract_layer_csv(root, meta)
-        tiles = Tilemap.parse_layer(csv_payload, meta)
+        render_csv = Tilemap.extract_named_layer_csv(root, "render", meta)
+        tiles = Tilemap.parse_layer(render_csv, meta)
 
-        return Tilemap(name=name, metadata=meta, tiles=tiles, tileset_id=tileset_id)
+        terrain_csv = Tilemap.extract_named_layer_csv(root, "terrain", meta)
+        terrain = Tilemap.parse_layer(terrain_csv, meta)
+        print(terrain)
+
+        return Tilemap(
+            name=name,
+            metadata=meta,
+            tiles=tiles,
+            terrain=terrain,
+            tileset_id=tileset_id,
+        )
 
     @staticmethod
     def parse_metadata(root) -> Tilemap.Metadata:
@@ -50,11 +61,7 @@ class Tilemap:
         assert root.attrib["orientation"] == "orthogonal"
         assert root.attrib["renderorder"] == "right-down"
 
-        return Tilemap.Metadata(
-            width=width,
-            height=height,
-            tile_size=tile_size,
-        )
+        return Tilemap.Metadata(width=width, height=height, tile_size=tile_size)
 
     @staticmethod
     def identify_tileset(root) -> str:
@@ -67,9 +74,15 @@ class Tilemap:
         return source
 
     @staticmethod
-    def extract_layer_csv(root, metadata: Tilemap.Metadata) -> str:
-        layers = root.findall("layer")
-        assert len(layers) == 1, f"expected 1 layer, got {len(layers)}"
+    def extract_named_layer_csv(
+        root, layer_name: str, metadata: Tilemap.Metadata
+    ) -> str:
+        layers = [
+            l for l in root.findall("layer") if l.attrib.get("name") == layer_name
+        ]
+        assert (
+            len(layers) == 1
+        ), f"expected 1 layer named '{layer_name}', got {len(layers)}"
 
         layer = layers[0]
         assert int(layer.attrib["width"]) == metadata.width
@@ -82,7 +95,7 @@ class Tilemap:
         return data_el.text.strip()
 
     @staticmethod
-    def parse_layer(csv: str, metadata: Metadata) -> list[int]:
+    def parse_layer(csv: str, metadata: Tilemap.Metadata) -> list[int]:
         rows = [
             [int(v) for v in row.split(",") if v.strip()] for row in csv.splitlines()
         ]
@@ -99,13 +112,17 @@ class Tilemap:
 
         return [v for row in rows for v in row]
 
-    def format_tiles(self) -> str:
+    def format_layer(self, data: list[int]) -> str:
         width = self.metadata.width
-        col_width = max(len(str(v)) for v in self.tiles)
-        rows = [
-            self.tiles[i * width : (i + 1) * width] for i in range(self.metadata.height)
-        ]
+        col_width = max(len(str(v)) for v in data)
+        rows = [data[i * width : (i + 1) * width] for i in range(self.metadata.height)]
         return "\n".join(" ".join(f"{v:{col_width}d}," for v in row) for row in rows)
+
+    def format_tiles(self) -> str:
+        return self.format_layer(self.tiles)
+
+    def format_terrain(self) -> str:
+        return self.format_layer(self.terrain)
 
     def log(self) -> None:
         print(f"-- map:        {self.name}")
@@ -114,3 +131,4 @@ class Tilemap:
         print(f"tile_size:     {self.metadata.tile_size}")
         print(f"tileset:       {self.tileset_id}")
         print(f"-- tiles:\n{self.tiles}")
+        print(f"-- terrain:\n{self.terrain}")
