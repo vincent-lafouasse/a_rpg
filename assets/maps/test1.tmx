@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="10" height="5" tilewidth="8" tileheight="8" infinite="0" nextlayerid="2" nextobjectid="1">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="10" height="5" tilewidth="8" tileheight="8" infinite="0" nextlayerid="3" nextobjectid="1">
     <tileset firstgid="1" source="colored_tilemap_packed.tsx"/>
 
     <layer id="1" name="render" width="10" height="5">
@@ -9,6 +9,17 @@
 17,18,18,18,18,18,18,18,18,20,
 17,18,18,18,18,18,18,18,18,20,
 33,35,2,2,2,2,2,2,2,36
+        </data>
+    </layer>
+
+    <layer id="2" name="terrain" width="10" height="5">
+        <terraintypes ground="1" wall="2"/>
+        <data encoding="csv">
+1,1,1,1,1,1,1,1,1,1,
+1,0,0,0,0,0,0,0,0,1,
+1,0,0,0,0,0,0,0,0,1,
+1,0,0,0,0,0,0,0,0,1,
+1,1,1,1,1,1,1,1,1,1
         </data>
     </layer>
 </map>
