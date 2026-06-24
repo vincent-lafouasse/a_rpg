@@ -37,9 +37,7 @@ class Renderer {
 
         for (int row = 0; row < map.height; ++row) {
             for (int col = 0; col < map.width; ++col) {
-                const size_t tile_offset =
-                    static_cast<size_t>(col + row * map.width);
-                const uint16_t tile = map.tiles[tile_offset];
+                const uint16_t tile = map.at(row, col);
 
                 if (tile == 0) {
                     continue;
