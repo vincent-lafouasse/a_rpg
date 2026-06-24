@@ -12,8 +12,8 @@
         </data>
     </layer>
 
+    <terraintypes ground="1" wall="2"/>
     <layer id="2" name="terrain" width="10" height="5">
-        <terraintypes ground="1" wall="2"/>
         <data encoding="csv">
 1,1,1,1,1,1,1,1,1,1,
 1,0,0,0,0,0,0,0,0,1,
