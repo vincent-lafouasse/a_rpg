@@ -4,6 +4,11 @@
 #include "Renderer.hpp"
 #include "Tilemap.hpp"
 
+struct GameState {
+    Vec2i player_pos;
+    // MapId current_map
+};
+
 int main()
 {
     Renderer renderer;
