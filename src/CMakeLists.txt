@@ -5,5 +5,6 @@ add_executable(rpg
     TilesetBank.cpp
     Tilemap.cpp
     LogicalMap.cpp
+    Renderer.cpp
 )
 target_link_libraries(rpg PRIVATE raylib::raylib)
