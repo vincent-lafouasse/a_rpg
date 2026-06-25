@@ -32,6 +32,11 @@ struct Vec2 {
         return {.x = a.x - b.x, .y = a.y - b.y};
     }
 
+    [[nodiscard]] static constexpr Vec2 negate(Vec2 v)
+    {
+        return {.x = -v.x, .y = -v.y};
+    }
+
     [[nodiscard]] static constexpr T dot(Vec2 a, Vec2 b)
     {
         return a.x * b.x + a.y * b.y;
