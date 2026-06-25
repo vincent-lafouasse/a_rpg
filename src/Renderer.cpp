@@ -26,7 +26,11 @@ static constexpr Color blue = {0, 100, 255, 100};
 static constexpr Color transparent = {0, 0, 0, 0};
 
 // pixel position of a tile's top-left corner, given player position as camera anchor
-Vec2i world_to_screen(Vec2i tile_pos, Vec2i player_pos, int tile_size, int win_w, int win_h)
+Vec2i world_to_screen(Vec2i tile_pos,
+                      Vec2i player_pos,
+                      int tile_size,
+                      int win_w,
+                      int win_h)
 {
     const Vec2i center = {.x = win_w / 2 - tile_size / 2,
                           .y = win_h / 2 - tile_size / 2};
@@ -86,7 +90,8 @@ void Renderer::render(const Tilemap& map,
 
             const Rectangle src = tileset.at(tile - 1);
             const Vec2i screen_pos =
-                world_to_screen(pos, state.player_pos, s_tile_size, s_window_width, s_window_height);
+                world_to_screen(pos, state.player_pos, s_tile_size,
+                                s_window_width, s_window_height);
             const Rectangle dst =
                 rectangle(screen_pos, {s_tile_size, s_tile_size});
             DrawTexturePro(tileset.texture, src, dst, {0, 0}, 0.0f, WHITE);
@@ -103,9 +108,11 @@ void Renderer::render(const Tilemap& map,
     {
         const Rectangle src = {0.0f, 0.0f, FLOAT(m_player_sprite.width),
                                FLOAT(m_player_sprite.height)};
-        const Vec2i player_screen = {.x = s_window_width  / 2 - s_tile_size / 2,
-                                     .y = s_window_height / 2 - s_tile_size / 2};
-        const Rectangle dst = rectangle(player_screen, {s_tile_size, s_tile_size});
+        const Vec2i player_screen = {
+            .x = s_window_width / 2 - s_tile_size / 2,
+            .y = s_window_height / 2 - s_tile_size / 2};
+        const Rectangle dst =
+            rectangle(player_screen, {s_tile_size, s_tile_size});
         DrawTexturePro(m_player_sprite, src, dst, {0, 0}, 0.0f, WHITE);
     }
 
