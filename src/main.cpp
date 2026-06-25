@@ -61,7 +61,8 @@ class Renderer {
 
         for (int row = 0; row < map.height; ++row) {
             for (int col = 0; col < map.width; ++col) {
-                const uint16_t tile = map.at(row, col);
+                const Vec2i pos{.x = col, .y = row};
+                const uint16_t tile = map.at(pos);
 
                 if (tile == 0) {
                     continue;
