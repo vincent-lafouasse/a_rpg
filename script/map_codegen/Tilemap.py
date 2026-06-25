@@ -1,12 +1,21 @@
 from __future__ import annotations
 
 import dataclasses
+from typing import ClassVar
 from pathlib import Path
 from lxml import etree
 
 
 @dataclasses.dataclass
 class Tilemap:
+    # canonical terrain type mapping: owns the serialization contract
+    # integer values must match what is encoded in the terrain layer CSV
+    TERRAIN_TYPES: ClassVar[dict[int, str]] = {
+        0: "none",
+        1: "ground",
+        2: "wall",
+    }
+
     @dataclasses.dataclass
     class Metadata:
         width: int
@@ -17,7 +26,6 @@ class Tilemap:
     metadata: Tilemap.Metadata
     tiles: list[int]
     terrain: list[int]
-    terrain_types: dict[int, str]  # int -> name, e.g. {1: "ground", 2: "wall"}
     tileset_id: str
 
     @staticmethod
@@ -40,18 +48,13 @@ class Tilemap:
         terrain_csv = Tilemap.extract_named_layer_csv(root, "terrain", meta)
         terrain = Tilemap.parse_layer(terrain_csv, meta)
 
-        terrain_types = Tilemap.parse_terrain_types(root)
-        for tile in terrain:
-            if tile not in terrain_types:
-                print(f"Unknown terrain key: {tile} in tilemap {name}")
-                print(terrain_types)
+        Tilemap.validate_terrain_types(root)
 
         return Tilemap(
             name=name,
             metadata=meta,
             tiles=tiles,
             terrain=terrain,
-            terrain_types=terrain_types,
             tileset_id=tileset_id,
         )
 
@@ -80,10 +83,13 @@ class Tilemap:
         return source
 
     @staticmethod
-    def parse_terrain_types(root) -> dict[int, str]:
+    def validate_terrain_types(root) -> None:
         el = root.find("terraintypes")
         assert el is not None, "missing <terraintypes> element"
-        return {int(v): k for k, v in el.attrib.items()}
+        parsed = {int(v): k for k, v in el.attrib.items()}
+        assert (
+            parsed == Tilemap.TERRAIN_TYPES
+        ), f"terraintypes mismatch:\n  tmx:      {parsed}\n  expected: {Tilemap.TERRAIN_TYPES}"
 
     @staticmethod
     def extract_named_layer_csv(
@@ -142,6 +148,5 @@ class Tilemap:
         print(f"height:          {self.metadata.height}")
         print(f"tile_size:       {self.metadata.tile_size}")
         print(f"tileset:         {self.tileset_id}")
-        print(f"terrain_types:   {self.terrain_types}")
         print(f"-- tiles:\n{self.tiles}")
         print(f"-- terrain:\n{self.terrain}")
