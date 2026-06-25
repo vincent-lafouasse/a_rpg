@@ -77,12 +77,19 @@ int main()
     LogicalMap logical_map;
     Tilemap tilemap;
 
-    KeyboardState keyboard;
     GameState state;
-    (void)keyboard;
-    (void)state;
 
     while (!WindowShouldClose()) {
+        const KeyboardState keyboard = {
+            .up_pressed = IsKeyPressed(KEY_W),
+            .down_pressed = IsKeyPressed(KEY_S),
+            .left_pressed = IsKeyPressed(KEY_A),
+            .right_pressed = IsKeyPressed(KEY_D),
+        };
+
+        const GameCommand command = parse_command(keyboard);
+        update_state(state, logical_map, command);
+
         renderer.render(tilemap, state, &logical_map);
     }
 }
