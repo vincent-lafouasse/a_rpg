@@ -46,6 +46,11 @@ struct Vec2 {
     {
         return {.x = scalar * v.x, .y = scalar * v.y};
     }
+
+    [[nodiscard]] static constexpr Vec2 up_from(Vec2 v) { return v - e_y; }
+    [[nodiscard]] static constexpr Vec2 down_from(Vec2 v) { return v + e_y; }
+    [[nodiscard]] static constexpr Vec2 left_from(Vec2 v) { return v - e_x; }
+    [[nodiscard]] static constexpr Vec2 right_from(Vec2 v) { return v + e_x; }
 };
 
 template <Vec2Scalar T>
