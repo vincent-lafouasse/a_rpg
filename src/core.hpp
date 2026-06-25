@@ -56,6 +56,16 @@ struct Vec2 {
     [[nodiscard]] constexpr Vec2 below() { return Vec2::down_from(*this); }
     [[nodiscard]] constexpr Vec2 to_left() { return Vec2::left_from(*this); }
     [[nodiscard]] constexpr Vec2 to_right() { return Vec2::right_from(*this); }
+
+    [[nodiscard]] static constexpr std::array<Vec2, 4> neighbours_of(Vec2 v)
+    {
+        return {{up_from(v), down_from(v), left_from(v), right_from(v)}};
+    }
+
+    [[nodiscard]] constexpr std::array<Vec2, 4> neighbours() const
+    {
+        return neighbours_of(*this);
+    }
 };
 
 template <Vec2Scalar T>
