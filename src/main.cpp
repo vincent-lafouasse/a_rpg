@@ -72,12 +72,12 @@ void update_state(GameState& state, LogicalMap& map, GameCommand command)
 
 int main()
 {
-    Renderer renderer;
-
+    GameState state;
     LogicalMap logical_map;
+
+    Renderer renderer;
     Tilemap tilemap;
 
-    GameState state;
 
     while (!WindowShouldClose()) {
         const KeyboardState keyboard = {
