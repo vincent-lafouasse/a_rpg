@@ -34,6 +34,33 @@ GameCommand parse_command(KeyboardState keyboard)
     return GameCommand::none;
 }
 
+void update_state(GameState& state, LogicalMap& map, GameCommand command)
+{
+    if (command == GameCommand::none) {
+        return;
+    }
+
+    using C = GameCommand;
+
+    Vec2i new_position = state.player_pos;
+    switch (command) {
+        case C::go_up:
+            new_position = new_position.above();
+            break;
+        case C::go_down:
+            new_position = new_position.below();
+            break;
+        case C::go_left:
+            new_position = new_position.to_left();
+            break;
+        case C::go_right:
+            new_position = new_position.to_right();
+            break;
+        case C::none:
+            __builtin_unreachable();
+    }
+}
+
 int main()
 {
     Renderer renderer;
