@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include "GameState.hpp"
 #include "core.hpp"
 #include "terrain_ids.gen.hpp"
 
@@ -52,12 +53,14 @@ Renderer::~Renderer()
     CloseWindow();
 }
 
-void Renderer::render(const Tilemap& map) const
+void Renderer::render(const Tilemap& map, const GameState& state) const
 {
-    render(map, nullptr);
+    render(map, state, nullptr);
 }
 
-void Renderer::render(const Tilemap& map, const LogicalMap* logical_map) const
+void Renderer::render(const Tilemap& map,
+                      const GameState& state,
+                      const LogicalMap* logical_map) const
 {
     const Tileset& tileset = m_tileset_bank.at(map.tileset_id);
 
@@ -84,6 +87,15 @@ void Renderer::render(const Tilemap& map, const LogicalMap* logical_map) const
                 DrawRectangleRec(dst, overlay);
             }
         }
+    }
+
+    // render player
+    {
+        const Rectangle src = {0.0f, 0.0f, FLOAT(m_player_sprite.width),
+                               FLOAT(m_player_sprite.height)};
+        const Rectangle dst = rectangle(s_tile_size * state.player_pos,
+                                        {s_tile_size, s_tile_size});
+        DrawTexturePro(m_player_sprite, src, dst, {0, 0}, 0.0f, WHITE);
     }
 
     EndDrawing();

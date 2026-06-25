@@ -2,6 +2,7 @@
 
 #include <raylib.h>
 
+#include "GameState.hpp"
 #include "LogicalMap.hpp"
 #include "Tilemap.hpp"
 #include "TilesetBank.hpp"
@@ -22,8 +23,10 @@ class Renderer {
     Renderer();
     ~Renderer();
 
-    void render(const Tilemap& map) const;
-    void render(const Tilemap& map, const LogicalMap* logical_map) const;
+    void render(const Tilemap& map, const GameState& state) const;
+    void render(const Tilemap& map,
+                const GameState& state,
+                const LogicalMap* logical_map) const;
 
    private:
     TilesetBank m_tileset_bank;

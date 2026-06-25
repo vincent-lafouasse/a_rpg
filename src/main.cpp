@@ -47,6 +47,6 @@ int main()
     (void)state;
 
     while (!WindowShouldClose()) {
-        renderer.render(tilemap, &logical_map);
+        renderer.render(tilemap, state, &logical_map);
     }
 }
