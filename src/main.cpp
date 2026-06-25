@@ -13,11 +13,26 @@ struct KeyboardState {
 };
 
 enum class GameCommand {
+    none,
     go_up,
     go_down,
     go_left,
     go_right,
 };
+
+// default to up-left
+GameCommand parse_command(KeyboardState keyboard)
+{
+    if (keyboard.up_pressed)
+        return GameCommand::go_up;
+    if (keyboard.left_pressed)
+        return GameCommand::go_left;
+    if (keyboard.down_pressed)
+        return GameCommand::go_down;
+    if (keyboard.right_pressed)
+        return GameCommand::go_right;
+    return GameCommand::none;
+}
 
 int main()
 {
