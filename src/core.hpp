@@ -105,6 +105,12 @@ struct Vec2 {
     {
         return neighbours_of(*this);
     }
+
+    [[nodiscard]] constexpr Vec2<float> as_float() const
+        requires std::same_as<T, int>
+    {
+        return {.x = static_cast<float>(x), .y = static_cast<float>(y)};
+    }
 };
 
 template <Vec2Scalar T>
