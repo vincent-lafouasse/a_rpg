@@ -65,7 +65,7 @@ void Renderer::render(const Tilemap& map,
     const Tileset& tileset = m_tileset_bank.at(map.tileset_id);
 
     BeginDrawing();
-    ClearBackground(RAYWHITE);
+    ClearBackground(BLACK);
 
     for (int row = 0; row < map.height; ++row) {
         for (int col = 0; col < map.width; ++col) {
