@@ -4,6 +4,9 @@
 #include "terrain_ids.gen.hpp"
 
 namespace {
+static constexpr const char* const k_player_sprite_path =
+    "./assets/sprites/kenney_micro-roguelike/Tiles/Colored/tile_0004.png";
+
 Rectangle rectangle(Vec2f pos, Vec2f sz)
 {
     return {.x = pos.x, .y = pos.y, .width = sz.x, .height = sz.y};
@@ -33,14 +36,16 @@ Color terrain_overlay_color(TerrainId id)
 }
 }  // namespace
 
-Renderer::Renderer() : m_tileset_bank()
+Renderer::Renderer() : m_tileset_bank(), m_player_sprite()
 {
     InitWindow(s_window_width, s_window_height, s_window_name);
     SetTargetFPS(s_target_fps);
     m_tileset_bank.initialize();
+    m_player_sprite = LoadTexture(k_player_sprite_path);
 }
 Renderer::~Renderer()
 {
+    UnloadTexture(m_player_sprite);
     CloseWindow();
 }
 

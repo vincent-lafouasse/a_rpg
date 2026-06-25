@@ -27,4 +27,5 @@ class Renderer {
 
    private:
     TilesetBank m_tileset_bank;
+    Texture2D m_player_sprite;
 };
