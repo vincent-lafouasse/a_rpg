@@ -1,5 +1,8 @@
 #include "Renderer.hpp"
 
+#include <cstdio>
+#include <cstdlib>
+
 #include "core.hpp"
 #include "terrain_ids.gen.hpp"
 
