@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <span>
 
+#include "core.hpp"
 #include "terrain_ids.gen.hpp"
 
 struct LogicalMap {
@@ -16,6 +17,8 @@ struct LogicalMap {
         const std::size_t offset = static_cast<size_t>(col + row * width);
         return tiles[offset];
     }
+
+    TerrainId at(Vec2i pos) const { return this->at(pos.y, pos.x); }
 
     std::span<const TerrainId> tiles;
     int height;
