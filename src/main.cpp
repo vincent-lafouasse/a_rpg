@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <string>
 #include <string_view>
 
@@ -7,6 +8,7 @@
 #include "Tilemap.hpp"
 #include "TilesetBank.hpp"
 #include "core.hpp"
+#include "terrain_ids.gen.hpp"
 
 class Renderer {
    public:
@@ -29,7 +31,28 @@ class Renderer {
     }
     ~Renderer() { CloseWindow(); }
 
-    void render(const Tilemap& map) const
+    static constexpr Color orange = {255, 140, 0, 120};
+    static constexpr Color blue = {0, 100, 255, 100};
+    static constexpr Color transparent = {0, 0, 0, 0};
+
+    static Color terrain_overlay_color(TerrainId id)
+    {
+        switch (id) {
+            case TerrainId::wall:
+                return orange;
+            case TerrainId::ground:
+                return blue;
+            case TerrainId::none:
+                return transparent;
+        }
+        std::fprintf(stderr, "unrecognized TerrainId: %d\n",
+                     static_cast<int>(id));
+        std::exit(1);
+    }
+
+    void render(const Tilemap& map) const { render(map, nullptr); }
+
+    void render(const Tilemap& map, const LogicalMap* logical_map) const
     {
         const Tileset& tileset = m_tileset_bank.at(map.tileset_id);
 
@@ -52,6 +75,12 @@ class Renderer {
                     FLOAT(s_tile_size),
                 };
                 DrawTexturePro(tileset.texture, src, dst, {0, 0}, 0.0f, WHITE);
+
+                if (logical_map != nullptr) {
+                    const Color overlay =
+                        terrain_overlay_color(logical_map->at(row, col));
+                    DrawRectangleRec(dst, overlay);
+                }
             }
         }
 
@@ -70,6 +99,6 @@ int main()
     Tilemap tilemap;
 
     while (!WindowShouldClose()) {
-        renderer.render(tilemap);
+        renderer.render(tilemap, &logical_map);
     }
 }
