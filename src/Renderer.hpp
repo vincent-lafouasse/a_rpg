@@ -16,8 +16,8 @@ class Renderer {
     static constexpr int s_target_fps = 60;
 
     // temporary hardcoding
-    static constexpr int s_window_width = s_tile_size * 10;
-    static constexpr int s_window_height = s_tile_size * 5;
+    static constexpr int s_window_width = s_tile_size * 15;
+    static constexpr int s_window_height = s_tile_size * 10;
 
    public:
     Renderer();
