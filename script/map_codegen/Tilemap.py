@@ -45,10 +45,10 @@ class Tilemap:
         render_csv = Tilemap.extract_named_layer_csv(root, "render", meta)
         tiles = Tilemap.parse_layer(render_csv, meta)
 
+        Tilemap.validate_terrain_types(root)
+
         terrain_csv = Tilemap.extract_named_layer_csv(root, "terrain", meta)
         terrain = Tilemap.parse_layer(terrain_csv, meta)
-
-        Tilemap.validate_terrain_types(root)
 
         return Tilemap(
             name=name,
