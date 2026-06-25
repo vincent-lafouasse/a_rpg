@@ -1,5 +1,6 @@
 #include <raylib.h>
 
+#include "GameState.hpp"
 #include "LogicalMap.hpp"
 #include "Renderer.hpp"
 #include "Tilemap.hpp"
@@ -16,11 +17,6 @@ enum class GameCommand {
     go_down,
     go_left,
     go_right,
-};
-
-struct GameState {
-    Vec2i player_pos{1, 1};
-    // MapId current_map
 };
 
 int main()
