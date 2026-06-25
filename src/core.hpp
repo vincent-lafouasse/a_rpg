@@ -24,21 +24,21 @@ struct Vec2 {
 
     [[nodiscard]] friend constexpr Vec2 operator+(Vec2 a, Vec2 b)
     {
-        return {.x = a.x + b.x, .y = a.y + b.y};
+        return add(a, b);
     }
     [[nodiscard]] friend constexpr Vec2 operator-(Vec2 a, Vec2 b)
     {
-        return {.x = a.x - b.x, .y = a.y - b.y};
+        return sub(a, b);
     }
-    [[nodiscard]] friend constexpr Vec2 operator-(Vec2 v)
-    {
-        return {.x = -v.x, .y = -v.y};
-    }
+    [[nodiscard]] friend constexpr Vec2 operator-(Vec2 v) { return negate(v); }
     [[nodiscard]] friend constexpr Vec2 operator*(Vec2 v, T s)
     {
-        return {.x = v.x * s, .y = v.y * s};
+        return scale(v, s);
     }
-    [[nodiscard]] friend constexpr Vec2 operator*(T s, Vec2 v) { return v * s; }
+    [[nodiscard]] friend constexpr Vec2 operator*(T s, Vec2 v)
+    {
+        return scale(v, s);
+    }
 
     constexpr Vec2& operator+=(Vec2 b)
     {
