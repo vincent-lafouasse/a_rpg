@@ -19,7 +19,7 @@ enum class GameCommand {
 };
 
 struct GameState {
-    Vec2i player_pos;
+    Vec2i player_pos {1, 1};
     // MapId current_map
 };
 
