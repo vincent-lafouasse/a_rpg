@@ -78,7 +78,6 @@ int main()
     Renderer renderer;
     Tilemap tilemap;
 
-
     while (!WindowShouldClose()) {
         const KeyboardState keyboard = {
             .up_pressed = IsKeyPressed(KEY_W),
