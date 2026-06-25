@@ -89,6 +89,7 @@ int main()
         const GameCommand command = parse_command(keyboard);
         update_state(state, logical_map, command);
 
-        renderer.render(tilemap, state, &logical_map);
+        // renderer.render(tilemap, state, &logical_map);
+        renderer.render(tilemap, state);
     }
 }
