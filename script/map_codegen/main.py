@@ -107,6 +107,44 @@ def codegen_terrain_ids(outdir: Path) -> None:
         f.write(src)
 
 
+def codegen_logical_map(map: Tilemap, outdir: Path) -> None:
+    from Tilemap import Tilemap as TM
+
+    def terrain_name(v: int) -> str:
+        return f"T::{TM.TERRAIN_TYPES[v]}"
+
+    with open(outdir / "logical_map_data.gen.inc", "w") as f:
+        data = ""
+        data += inspect.cleandoc(
+            f"""
+            // -*- mode: c++ -*- vim: ft=cpp
+
+            #include <array>
+
+            #include "terrain_ids.gen.hpp"
+
+            static constexpr int k_logical_map_height = {map.metadata.height};
+            static constexpr int k_logical_map_width = {map.metadata.width};
+            static constexpr int k_logical_map_tile_size = {map.metadata.tile_size};
+        """
+        )
+        data += "\n\n"
+
+        named = [terrain_name(v) for v in map.terrain]
+        col_width = max(len(s) for s in named)
+        width = map.metadata.width
+        rows = [named[i * width : (i + 1) * width] for i in range(map.metadata.height)]
+        initializer = "\n".join(
+            "    " + " ".join(f"{s:{col_width}s}," for s in row) for row in rows
+        )
+
+        data += "using T = TerrainId;\n"
+        data += f"static constexpr std::array<T, k_logical_map_height * k_logical_map_width> k_terrain_data = {{\n"
+        data += initializer
+        data += "\n};\n"
+        f.write(data)
+
+
 def codegen_tilemap(map: Tilemap, bank: list[Tileset], outdir: Path) -> None:
     # TODO: store stem and not basename
     tileset_id = map.tileset_id[:-4]
@@ -162,6 +200,7 @@ def main() -> None:
 
     codegen_tileset_bank(tileset_bank, project_root, outdir)
     codegen_terrain_ids(outdir)
+    codegen_logical_map(tilemap, outdir)
     codegen_tilemap(tilemap, project_root, outdir)
 
 
