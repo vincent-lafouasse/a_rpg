@@ -1,4 +1,4 @@
-.PHONY: all debug release run run-release clean fmt b r rel re
+.PHONY: all debug release run run-release clean fmt b r rel re f
 
 all: debug
 
@@ -27,9 +27,10 @@ clean:
 
 re: clean build
 
-fmt:
+format:
 	clang-format -i $(shell find src -name '*.cpp' -o -name '*.hpp' -o -name '*.h' | grep -v '\.gen\.')
 
 b: debug
 r: run
 rel: release
+f: format
