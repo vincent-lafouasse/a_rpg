@@ -59,6 +59,15 @@ void update_state(GameState& state, LogicalMap& map, GameCommand command)
         case C::none:
             __builtin_unreachable();
     }
+
+    if (!map.in_bounds(new_position)) {
+        return;
+    }
+
+    const TerrainId new_tile = map.at(new_position);
+    if (new_tile == TerrainId::ground) {
+        state.player_pos = new_position;
+    }
 }
 
 int main()
