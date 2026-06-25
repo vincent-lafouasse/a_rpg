@@ -22,6 +22,45 @@ struct Vec2 {
     static const Vec2 e_x;
     static const Vec2 e_y;
 
+    [[nodiscard]] friend constexpr Vec2 operator+(Vec2 a, Vec2 b)
+    {
+        return {.x = a.x + b.x, .y = a.y + b.y};
+    }
+    [[nodiscard]] friend constexpr Vec2 operator-(Vec2 a, Vec2 b)
+    {
+        return {.x = a.x - b.x, .y = a.y - b.y};
+    }
+    [[nodiscard]] friend constexpr Vec2 operator-(Vec2 v)
+    {
+        return {.x = -v.x, .y = -v.y};
+    }
+    [[nodiscard]] friend constexpr Vec2 operator*(Vec2 v, T s)
+    {
+        return {.x = v.x * s, .y = v.y * s};
+    }
+    [[nodiscard]] friend constexpr Vec2 operator*(T s, Vec2 v) { return v * s; }
+
+    constexpr Vec2& operator+=(Vec2 b)
+    {
+        x += b.x;
+        y += b.y;
+        return *this;
+    }
+    constexpr Vec2& operator-=(Vec2 b)
+    {
+        x -= b.x;
+        y -= b.y;
+        return *this;
+    }
+    constexpr Vec2& operator*=(T s)
+    {
+        x *= s;
+        y *= s;
+        return *this;
+    }
+
+    [[nodiscard]] friend constexpr bool operator==(Vec2 a, Vec2 b) = default;
+
     [[nodiscard]] static constexpr Vec2 add(Vec2 a, Vec2 b)
     {
         return {.x = a.x + b.x, .y = a.y + b.y};
