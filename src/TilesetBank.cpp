@@ -1,5 +1,8 @@
 #include "TilesetBank.hpp"
 
+#include <cstdio>
+#include <cstdlib>
+
 #include "tileset_assets.gen.inc"
 
 // TODO: probably some error checking but this is fine for now
