@@ -5,8 +5,22 @@
 // includes no-one, generally has no dependencies beyond libc[++]
 
 #include <array>
+#include <concepts>
+#include <type_traits>
 
 #define FLOAT(expr) (static_cast<float>(expr))
+
+template <typename T>
+concept Vec2Scalar = std::same_as<T, int> || std::same_as<T, float>;
+
+template <Vec2Scalar T>
+struct Vec2 {
+    T x{};
+    T y{};
+};
+
+using Vec2f = Vec2<float>;
+using Vec2i = Vec2<int>;
 
 template <typename T, std::size_t W, std::size_t H>
 struct FlatArray {
