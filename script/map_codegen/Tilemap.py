@@ -50,6 +50,11 @@ class Tilemap:
         terrain_csv = Tilemap.extract_named_layer_csv(root, "terrain", meta)
         terrain = Tilemap.parse_layer(terrain_csv, meta)
 
+        assert all(v in Tilemap.TERRAIN_TYPES for v in terrain), (
+            f"terrain layer contains unrecognized values: "
+            f"{set(v for v in terrain if v not in Tilemap.TERRAIN_TYPES)}"
+        )
+
         return Tilemap(
             name=name,
             metadata=meta,
