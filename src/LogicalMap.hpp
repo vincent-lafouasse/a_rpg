@@ -20,6 +20,13 @@ struct LogicalMap {
 
     TerrainId at(Vec2i pos) const { return this->at(pos.y, pos.x); }
 
+    bool in_bounds(Vec2i pos) const
+    {
+        const bool x_ok = (pos.x >= 0) && (pos.x < width);
+        const bool y_ok = (pos.y >= 0) && (pos.y < height);
+        return x_ok && y_ok;
+    }
+
     std::span<const TerrainId> tiles;
     int height;
     int width;
