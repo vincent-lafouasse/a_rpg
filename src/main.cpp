@@ -10,6 +10,18 @@
 #include "core.hpp"
 #include "terrain_ids.gen.hpp"
 
+namespace {
+Rectangle rectangle(Vec2f pos, Vec2f sz)
+{
+    return {.x = pos.x, .y = pos.y, .width = sz.x, .height = sz.y};
+}
+
+Rectangle rectangle(Vec2i pos, Vec2i sz)
+{
+    return rectangle(pos.as_float(), sz.as_float());
+}
+}  // namespace
+
 class Renderer {
    public:
     static constexpr int s_tile_size = 64;
@@ -69,12 +81,8 @@ class Renderer {
                 }
 
                 const Rectangle src = tileset.at(tile - 1);
-                const Rectangle dst{
-                    FLOAT(col * s_tile_size),
-                    FLOAT(row * s_tile_size),
-                    FLOAT(s_tile_size),
-                    FLOAT(s_tile_size),
-                };
+                const Rectangle dst =
+                    rectangle(s_tile_size * pos, {s_tile_size, s_tile_size});
                 DrawTexturePro(tileset.texture, src, dst, {0, 0}, 0.0f, WHITE);
 
                 if (logical_map != nullptr) {
