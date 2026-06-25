@@ -17,6 +17,25 @@ template <Vec2Scalar T>
 struct Vec2 {
     T x{};
     T y{};
+
+    static constexpr Vec2 zero = {};
+    static constexpr Vec2 e_x = {.x = static_cast<T>(1)};
+    static constexpr Vec2 e_y = {.y = static_cast<T>(1)};
+
+    [[nodiscard]] static constexpr Vec2 add(Vec2 a, Vec2 b)
+    {
+        return {.x = a.x + b.x, .y = a.y + b.y};
+    }
+
+    [[nodiscard]] static constexpr Vec2 sub(Vec2 a, Vec2 b)
+    {
+        return {.x = a.x - b.x, .y = a.y - b.y};
+    }
+
+    [[nodiscard]] static constexpr T dot(Vec2 a, Vec2 b)
+    {
+        return a.x * b.x + a.y * b.y;
+    }
 };
 
 using Vec2f = Vec2<float>;
