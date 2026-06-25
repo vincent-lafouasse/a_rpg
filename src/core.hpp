@@ -51,6 +51,11 @@ struct Vec2 {
     [[nodiscard]] static constexpr Vec2 down_from(Vec2 v) { return v + e_y; }
     [[nodiscard]] static constexpr Vec2 left_from(Vec2 v) { return v - e_x; }
     [[nodiscard]] static constexpr Vec2 right_from(Vec2 v) { return v + e_x; }
+
+    [[nodiscard]] constexpr Vec2 above() { return Vec2::up_from(*this); }
+    [[nodiscard]] constexpr Vec2 below() { return Vec2::down_from(*this); }
+    [[nodiscard]] constexpr Vec2 to_left() { return Vec2::left_from(*this); }
+    [[nodiscard]] constexpr Vec2 to_right() { return Vec2::right_from(*this); }
 };
 
 template <Vec2Scalar T>
