@@ -41,6 +41,11 @@ struct Vec2 {
     {
         return a.x * b.x + a.y * b.y;
     }
+
+    [[nodiscard]] static constexpr Vec2 scale(Vec2 v, T scalar)
+    {
+        return {.x = scalar * v.x, .y = scalar * v.y};
+    }
 };
 
 using Vec2f = Vec2<float>;
