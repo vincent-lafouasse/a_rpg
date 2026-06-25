@@ -3,6 +3,7 @@
 
 #include <raylib.h>
 
+#include "LogicalMap.hpp"
 #include "Tilemap.hpp"
 #include "TilesetBank.hpp"
 #include "core.hpp"
@@ -65,6 +66,7 @@ int main()
 {
     Renderer renderer;
 
+    LogicalMap logical_map;
     Tilemap tilemap;
 
     while (!WindowShouldClose()) {
