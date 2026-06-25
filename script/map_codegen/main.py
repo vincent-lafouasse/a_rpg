@@ -78,6 +78,35 @@ def codegen_tileset_bank(bank: list[Tileset], project_root: Path, outdir: Path) 
         tileset_asset_file.write(asset_source)
 
 
+def codegen_terrain_ids(outdir: Path) -> None:
+    from Tilemap import Tilemap
+
+    terrain_types = Tilemap.TERRAIN_TYPES  # {int: str}
+
+    src = ""
+    src += inspect.cleandoc(
+        f"""
+        #pragma once
+
+        enum class TerrainId : int {{
+    """
+    )
+    src += "\n"
+    for value, name in sorted(terrain_types.items()):
+        src += f"    {name} = {value},\n"
+    src += inspect.cleandoc(
+        f"""
+        }};
+
+        inline constexpr int k_terrain_type_number = {len(terrain_types)};
+    """
+    )
+    src += "\n"
+
+    with open(outdir / "terrain_ids.gen.hpp", "w") as f:
+        f.write(src)
+
+
 def codegen_tilemap(map: Tilemap, bank: list[Tileset], outdir: Path) -> None:
     # TODO: store stem and not basename
     tileset_id = map.tileset_id[:-4]
@@ -132,6 +161,7 @@ def main() -> None:
     outdir = project_root / "src"
 
     codegen_tileset_bank(tileset_bank, project_root, outdir)
+    codegen_terrain_ids(outdir)
     codegen_tilemap(tilemap, project_root, outdir)
 
 
