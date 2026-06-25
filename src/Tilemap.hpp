@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <span>
 
+#include "core.hpp"
 #include "tileset_ids.gen.hpp"
 
 struct Tilemap {
@@ -18,6 +19,8 @@ struct Tilemap {
         const size_t tile_offset = static_cast<size_t>(col + row * width);
         return tiles[tile_offset];
     }
+
+    TileOffset at(Vec2i pos) const { return this->at(pos.y, pos.x); }
 
     std::span<const TileOffset> tiles;
     TilesetId tileset_id;

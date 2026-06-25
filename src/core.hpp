@@ -18,9 +18,9 @@ struct Vec2 {
     T x{};
     T y{};
 
-    static constexpr Vec2 zero = {};
-    static constexpr Vec2 e_x = {.x = static_cast<T>(1)};
-    static constexpr Vec2 e_y = {.y = static_cast<T>(1)};
+    static const Vec2 zero;
+    static const Vec2 e_x;
+    static const Vec2 e_y;
 
     [[nodiscard]] static constexpr Vec2 add(Vec2 a, Vec2 b)
     {
@@ -47,6 +47,13 @@ struct Vec2 {
         return {.x = scalar * v.x, .y = scalar * v.y};
     }
 };
+
+template <Vec2Scalar T>
+inline constexpr Vec2<T> Vec2<T>::zero = {};
+template <Vec2Scalar T>
+inline constexpr Vec2<T> Vec2<T>::e_x = {.x = static_cast<T>(1)};
+template <Vec2Scalar T>
+inline constexpr Vec2<T> Vec2<T>::e_y = {.y = static_cast<T>(1)};
 
 using Vec2f = Vec2<float>;
 using Vec2i = Vec2<int>;
